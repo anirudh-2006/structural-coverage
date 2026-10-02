@@ -1,0 +1,22 @@
+cell,human_before,human_after,machine_before,machine_after,supported_after
+arith x 16+,190,190,1399,1399,True
+arith x 2-4,34,34,4947,4947,True
+arith x 4-8,114,114,4327,4327,True
+arith x 8-16,122,122,3457,3457,True
+decide x 0-2,27,27,19,19,False
+decide x 2-4,36,36,47,47,True
+none x 0-2,14179,14177,292,292,True
+none x 16+,548,548,1,1,True
+none x 2-4,13059,13058,330,330,True
+none x 4-8,6775,6775,101,101,True
+none x 8-16,2448,2448,12,12,True
+other x 0-2,203,203,8,8,True
+other x 16+,48,48,1,1,True
+other x 2-4,334,334,131,131,True
+other x 4-8,249,249,143,143,True
+other x 8-16,159,159,22,22,True
+simp x 0-2,9578,9576,101,101,True
+simp x 16+,2283,2283,175,175,True
+simp x 2-4,8498,8496,1265,1265,True
+simp x 4-8,5771,5771,1919,1919,True
+simp x 8-16,4213,4213,592,592,True

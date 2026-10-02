@@ -1,0 +1,7 @@
+corpus,class,vocab,occurrences,occurrence_share,mean_depth
+human,AUTO,28,279,0.0006390756995473786,23.727598566308245
+human,notation_backed(named),7,224,0.0005130930347620531,74.25892857142857
+human,simp_set(named),4,1513,0.0034656685785490462,76.94051553205551
+machine,AUTO,0,0,0.0,
+machine,notation_backed(named),1,1,1.9130700948882767e-05,82.0
+machine,simp_set(named),3,563,0.010770584634220998,77.65186500888099

@@ -1,0 +1,7 @@
+layer,matcher,matched,total,rate
+mathematical,loose,6196,7563,0.8193
+mathematical,strict,2599,7563,0.3436
+infrastructure,loose,2438,6558,0.3718
+infrastructure,strict,539,6558,0.0822
+all_explicit,loose,8634,14121,0.6114
+all_explicit,strict,3138,14121,0.2222

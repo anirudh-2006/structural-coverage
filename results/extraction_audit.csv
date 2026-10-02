@@ -1,0 +1,11 @@
+layer,matcher,recovered,total,rate
+mathematical,loose,1830,2988,0.6124
+mathematical,strict,1429,2988,0.4782
+infrastructure,loose,277,2569,0.1078
+infrastructure,strict,117,2569,0.0455
+all_explicit,loose,2107,5557,0.3792
+all_explicit,strict,1546,5557,0.2782
+gate,efficiency,0.6124,0.8193,0.7475
+gate,efficiency_paired,0.6124,0.7915,0.7738
+gate,worst_case,1830,198,0.5784
+gate,efficiency_reachable,0.6124,0.6948,0.8815

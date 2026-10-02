@@ -1,0 +1,6 @@
+step,recovery_instrument,gap,delta
+"binary split, jixia strata (2026-08-13 design)",ceiling_matcher,0.06127878662930797,
+"binary split, matcher strata + census mix",ceiling_matcher,0.1094034157231881,0.04812462909388013
+"per-class split, matcher strata + census mix",ceiling_matcher,0.12906792681922966,0.01966451109604156
+  ... scope only: decl-scope substring matcher,reachable_bound,0.09614248490828153,-0.03292544191094812
+"per-class split, REAL EXTRACTOR recovery (2026-08-16)",extractor,0.08011155210585558,-0.016030932802425957

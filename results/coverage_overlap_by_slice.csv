@@ -1,0 +1,3 @@
+scope,human_vocab,machine_vocab,jaccard,intersection,human_only,machine_only,human_only_fraction,machine_only_fraction,premise_set_basis,length_axis,superseded_by
+full,118514,1127,0.008905004848842603,1056,117458,71,0.9910896602932987,0.06299911268855368,raw_uncorrected,characters,results/coverage_common_support.csv
+overlap,41864,494,0.008739968088399896,367,41497,127,0.991233518058475,0.25708502024291496,raw_uncorrected,characters,results/coverage_common_support.csv

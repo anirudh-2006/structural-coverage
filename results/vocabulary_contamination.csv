@@ -1,0 +1,3 @@
+corpus,proofs,vocabulary_raw,occurrences_raw,self_hit_rate,keyword_hit_rate,vocabulary_corrected,occurrences_corrected,unexcluded_tactic_name_occurrences
+human,70086,118514,528260,0.9843335330879206,0.31689638444197127,78642,437062,5222
+machine,29750,1127,61897,0.0,0.0,1127,61897,14

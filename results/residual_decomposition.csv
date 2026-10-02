@@ -1,0 +1,4 @@
+class,description,share_pct,residual_targets,source
+resolution_vs_substring,"matcher/tokeniser disagreement - the bound substring-matches names, the extractor resolves identifiers",89.5,248,notes/changes/2026-08-16-extraction-audit-first-run.md
+keyword_list,"last component sits in the extractor's _KEYWORDS list",8.9,248,notes/changes/2026-08-16-extraction-audit-first-run.md
+comment_or_string_only,"occurs only inside a comment or string literal, which the extractor strips",1.6,248,notes/changes/2026-08-16-extraction-audit-first-run.md

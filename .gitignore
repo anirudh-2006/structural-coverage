@@ -1,0 +1,26 @@
+data/
+*.pyc
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.DS_Store
+
+# LaTeX build products
+*.log
+*.aux
+*.out
+*.xdv
+*.synctex.gz
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+
+# The compiled paper is a release artifact and is tracked deliberately,
+# against the blanket *.pdf rule above.
+*.pdf
+!papers/mathai-2026/main.pdf
