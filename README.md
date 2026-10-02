@@ -78,10 +78,12 @@ Then the analyses, each writing committed CSVs into `results/`:
 python -m src.extract.ceiling              # extraction ceiling
 python -m src.analysis.vocabulary_contamination
 python -m src.analysis.area_restricted     # the headline coverage table
+python -m src.analysis.layer_composition   # infrastructure vs mathematical hubs
 python -m src.analysis.common_support      # strata + rarefaction
 python -m src.analysis.length_control
 python -m src.analysis.tactic_strata       # instrument calibration
 python -m src.analysis.proof_census
+python -m src.analysis.premise_concentration  # per-premise occurrence shares
 ```
 
 Sample sizes and seeds come from `src/config.py` so a clean checkout reproduces
@@ -101,7 +103,8 @@ CSVs carry full precision.
 | **0.0129** Jaccard, full corpora | abstract, §1, Table 1 | `results/coverage_by_policy.csv` | `policy="corrected"` → `jaccard` = 0.012875372992190971 | `src/analysis/vocabulary_contamination.py` |
 | **23.1%** arith x 0–2 steps, machine share | abstract, §1, §5 | `results/common_support_cells.csv` | `cell="arith x 0-2"` → `machine_share` = 0.230890756302521 (n = 6,869 / 29,750) | `src/analysis/common_support.py` |
 | **0.6124** extraction retention | §3, §7 | `results/extraction_audit.csv` | `layer="mathematical", matcher="loose"` → `rate` (1,830 / 2,988) | `src/extract/audit.py` |
-| **27.0%** `sq_nonneg` share of machine premise occurrences | abstract, §1, §5 | **TODO** | **TODO** | **TODO** |
+| **27.0%** `sq_nonneg` share of machine premise occurrences | abstract, §1, §5 | `results/premise_concentration.csv` | `premise="sq_nonneg"` (rank 1) → `share` = 0.2700938656154579 (16,718 / 61,897) | `src/analysis/premise_concentration.py` |
+| **68.1%** top-25 premises, share of machine premise occurrences | abstract, §1, §5 | `results/premise_concentration.csv` | `rank=25` → `cumulative_share` = 0.6814869864452235 | `src/analysis/premise_concentration.py` |
 
 Supporting numbers traced the same way:
 
@@ -114,34 +117,33 @@ Supporting numbers traced the same way:
 | 32,091 restricted human vocabulary, 42 regions | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `human_vocab`, `n_regions` | `src/analysis/area_restricted.py` |
 | 19.2x / 24.1x sensitivity arms (S1, S2) | `results/coverage_area_restricted.csv` | `design="S1 restricted — top-12 only"`, `"S2 restricted — dotted only"` → `ratio` | `src/analysis/area_restricted.py` |
 | 5,222 human / 14 machine unexcluded tactic-name resolutions | `results/vocabulary_contamination.csv` | `unexcluded_tactic_name_occurrences` | `src/analysis/vocabulary_contamination.py` |
+| 18.8x, 1:1 class- and step-matched design | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `human_vocab` 21,162 ÷ `machine_vocab` 1,123 = 18.844167408726626 | `src/analysis/common_support.py` |
+| 89.6x, mathematical hub layer only | `results/layer_composition.csv` | `mathematical` column, `corpus="human"` 75,063 ÷ `corpus="machine"` 838 = 89.57398568019093 | `src/analysis/layer_composition.py` |
 
-### TODO
+### The one number this release cannot regenerate
 
-Open items in this release, listed rather than papered over:
+The paper's **5.7x** exploratory genre-matched ratio was a one-off measurement,
+not a pipeline output. It was taken by hand, read-only, and no script or CSV was
+ever produced for it, so it cannot be regenerated from this release. Its change
+record gives the figures in full:
 
-- **`sq_nonneg` = 27.0% of machine premise occurrences, and the top-25 = 68.1%,
-  are not reproduced by anything in this repo.** No committed CSV contains the
-  string `sq_nonneg`, and no script in `src/` computes a per-premise occurrence
-  share or a top-k concentration. Both numbers appear in the paper's abstract,
-  §1 and §5. The script that produced them is not part of this snapshot and
-  needs to be written or recovered before the claim is independently checkable.
-- **18.8x (1:1 class- and step-matched design) is not traced.** The paper cites
-  it in §1; `src/analysis/length_control.py` and
-  `results/length_controlled_cells.csv` are the likely source but the exact row
-  and column were not confirmed, so it is not asserted above.
-- **5.7x exploratory `Archive/Imo` comparison is not traced.** The paper marks
-  it exploratory and not pre-registered; no corresponding CSV was identified in
-  `results/`.
-- **89.6x mathematical-layer-only ratio is not traced.** Cited in the paper's
-  instrument paragraph; `results/layer_composition.csv` is the likely source,
-  unconfirmed.
-- **`make figures` is broken.** The `figures` target invokes
-  `python -m src.analysis.make_figures`, and `src/analysis/make_figures.py` does
-  not exist at this revision. The paper's figures are not regenerable from this
-  snapshot.
-- **`make data` is incomplete.** It runs only the graph and machine-corpus
-  fetchers, not `fetch_mathlib_source.sh`, which extraction requires. Use
-  `scripts/download_data.sh` instead.
+| Corpus | Proofs | Distinct premises |
+|---|---|---|
+| mathlib `Archive/Imo` | 508 declarations | 1,101 |
+| Goedel, rarefied to 508 proofs over 20 seeds | 508 | 193 mean (range 164–227) |
+| | | **5.7x** |
+
+The paper labels it exploratory and not pre-registered, and reports it as a
+lower bound: 467 of the 508 declarations cite at least one local lemma the
+extractor cannot see, `Archive` lying outside the graph's build target, which
+also leaves it outside the extraction audit. It is not a control and is not
+reported as one.
+
+### Known gaps
+
+- **The paper's figures are not regenerable from this snapshot.** The script
+  that produced them is not included, and the `figures` make target that
+  referenced it has been removed rather than left broken.
 - **Provenance comments point outside this release.** Roughly 60 docstrings and
   comments across `src/` and `tests/` cite `CLAUDE.md` sections and
   `notes/changes/*.md` change records, neither of which is included in this

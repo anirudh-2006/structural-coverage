@@ -1,11 +1,10 @@
-.PHONY: setup data audit ceiling reference test lint figures clean
+.PHONY: setup data audit ceiling reference concentration test lint clean
 
 setup:
 	pip install -r requirements.txt --break-system-packages
 
 data:
-	bash scripts/fetch_mathlib_graph.sh
-	bash scripts/fetch_machine_corpora.sh
+	bash scripts/download_data.sh
 
 audit:
 	pytest tests/test_extraction_audit.py -v -s
@@ -19,14 +18,14 @@ ceiling:
 reference:
 	python -m src.analysis.length_control
 
+concentration:
+	python -m src.analysis.premise_concentration
+
 test:
 	pytest tests/ -v
 
 lint:
 	ruff check src/ tests/
-
-figures:
-	python -m src.analysis.make_figures
 
 clean:
 	rm -rf __pycache__ .pytest_cache .ruff_cache
