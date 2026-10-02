@@ -3,7 +3,6 @@
 **MATH-AI @ NeurIPS 2026** — Anirudh Balaji
 
 - **Paper:** [`papers/mathai-2026/main.pdf`](papers/mathai-2026/main.pdf)
-- **OpenReview:** TODO
 
 Code and committed results for the paper above (non-archival workshop track).
 LaTeX source alongside the PDF in [`papers/mathai-2026/`](papers/mathai-2026/).
@@ -28,10 +27,10 @@ Three findings:
 2. **There is a characteristic concentration, and it is a stratum.**
    Arithmetic-tactic proofs of at most two tactic steps are 23.1% of the machine
    corpus and 0.02% of mathlib (14 of 70,086 declarations).
-3. **A negative methodological result about the released graph.** The graph
-   release's published per-declaration layer attribute is a centrality proxy,
-   not a derivation-length measure. A depth finding built on it is withdrawn in
-   the paper rather than reinterpreted.
+3. **A cautionary negative result.** We misread the graph release's
+   per-declaration layer attribute as a derivation-length measure; as we used
+   it, it behaves as a centrality proxy, and the depth finding built on it is
+   withdrawn in the paper rather than reinterpreted.
 
 The object of study is the *explicit subgraph* of mathlib4's dependency graph as
 released by Li et al. (arXiv:2604.24797) — the source-visible portion
@@ -75,7 +74,7 @@ missing download, not a broken test.
 
 ```
 make data      # if you have not already; see Setup above
-make audit     # extraction retention on the explicit subgraph; the gate
+make audit     # extraction retention audit
 make test      # full test suite — 28 pass once data/ is populated
 make lint      # ruff
 ```
@@ -109,10 +108,10 @@ CSVs carry full precision.
 | **69.8x** vocabulary ratio, full corpora | §1, Table 1 | `results/coverage_area_restricted.csv` | `design="full corpora"` → `ratio` = 69.77994676131323 | `src/analysis/area_restricted.py` |
 | **28.5x** ratio, area-restricted (primary control) | §1, Table 1 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `ratio` = 28.474711623779946 | `src/analysis/area_restricted.py` |
 | **0.0129** Jaccard, full corpora | abstract, §1, Table 1 | `results/coverage_by_policy.csv` | `policy="corrected"` → `jaccard` = 0.012875372992190971 | `src/analysis/vocabulary_contamination.py` |
-| **23.1%** arith x 0–2 steps, machine share | abstract, §1, §5 | `results/common_support_cells.csv` | `cell="arith x 0-2"` → `machine_share` = 0.230890756302521 (n = 6,869 / 29,750) | `src/analysis/common_support.py` |
-| **0.6124** extraction retention | §3, §7 | `results/extraction_audit.csv` | `layer="mathematical", matcher="loose"` → `rate` (1,830 / 2,988) | `src/extract/audit.py` |
-| **27.0%** `sq_nonneg` share of machine premise occurrences | abstract, §1, §5 | `results/premise_concentration.csv` | `premise="sq_nonneg"` (rank 1) → `share` = 0.2700938656154579 (16,718 / 61,897) | `src/analysis/premise_concentration.py` |
-| **68.1%** top-25 premises, share of machine premise occurrences | abstract, §1, §5 | `results/premise_concentration.csv` | `rank=25` → `cumulative_share` = 0.6814869864452235 | `src/analysis/premise_concentration.py` |
+| **23.1%** arith x 0–2 steps, machine share | abstract, §1, §4.2 | `results/common_support_cells.csv` | `cell="arith x 0-2"` → `machine_share` = 0.230890756302521 (n = 6,869 / 29,750) | `src/analysis/common_support.py` |
+| **0.6124** extraction retention | §3, §5 | `results/extraction_audit.csv` | `layer="mathematical", matcher="loose"` → `rate` (1,830 / 2,988) | `src/extract/audit.py` |
+| **27.0%** `sq_nonneg` share of machine premise occurrences | abstract, §1, §4.2 | `results/premise_concentration.csv` | `premise="sq_nonneg"` (rank 1) → `share` = 0.2700938656154579 (16,718 / 61,897) | `src/analysis/premise_concentration.py` |
+| **68.1%** top-25 premises, share of machine premise occurrences | abstract, §1, §4.2 | `results/premise_concentration.csv` | `rank=25` → `cumulative_share` = 0.6814869864452235 | `src/analysis/premise_concentration.py` |
 
 Supporting numbers traced the same way:
 
@@ -170,13 +169,23 @@ src/
 tests/        the extraction audit lives here as an assertion
 results/      committed CSVs
 papers/
-  mathai-2026/  paper source (LaTeX), compiled PDF, methods and limitations notes
+  mathai-2026/  paper source (LaTeX) and compiled PDF
 ```
 
 ## Citing
 
-The paper is a non-archival workshop submission. Please cite the published
-mathlib graph it builds on:
+The paper is a non-archival workshop submission.
+
+```bibtex
+@inproceedings{balaji2026structural,
+  author    = {Anirudh Balaji},
+  title     = {Structural Coverage: Do AI Provers Use Mathlib the Way Mathematicians Do?},
+  booktitle = {MATH-AI at NeurIPS 2026},
+  year      = {2026}
+}
+```
+
+Please also cite the published mathlib graph it builds on:
 
 > Li, Peng, Severini, Shafto. *The Network Structure of Mathlib.*
 > arXiv:2604.24797, 2026.
