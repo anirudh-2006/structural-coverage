@@ -1,10 +1,12 @@
-# Structural Coverage
+# Structural Coverage: Do AI Provers Use Mathlib the Way Mathematicians Do?
 
-**Do AI provers use mathlib the way mathematicians do?**
+**MATH-AI @ NeurIPS 2026** — Anirudh Balaji
 
-Code and committed results for *Structural Coverage: Do AI Provers Use Mathlib
-the Way Mathematicians Do?* (MATH-AI @ NeurIPS 2026, non-archival workshop
-track). Paper source and PDF: [`papers/mathai-2026/`](papers/mathai-2026/).
+- **Paper:** [`papers/mathai-2026/main.pdf`](papers/mathai-2026/main.pdf)
+- **OpenReview:** TODO
+
+Code and committed results for the paper above (non-archival workshop track).
+LaTeX source alongside the PDF in [`papers/mathai-2026/`](papers/mathai-2026/).
 
 ## Summary
 
@@ -66,9 +68,15 @@ source-visible extraction needs the `.lean` files.
 
 ## Reproduce
 
+`make data` must run first. The test suite and every analysis below read from
+`data/`, which is gitignored and absent from a fresh clone; without it 15 of the
+28 tests fail with `FileNotFoundError` on `data/mathlib_graph/...`. That is a
+missing download, not a broken test.
+
 ```
+make data      # if you have not already; see Setup above
 make audit     # extraction retention on the explicit subgraph; the gate
-make test      # full test suite
+make test      # full test suite — 28 pass once data/ is populated
 make lint      # ruff
 ```
 
@@ -141,9 +149,6 @@ reported as one.
 
 ### Known gaps
 
-- **The paper's figures are not regenerable from this snapshot.** The script
-  that produced them is not included, and the `figures` make target that
-  referenced it has been removed rather than left broken.
 - **Provenance comments point outside this release.** Roughly 60 docstrings and
   comments across `src/` and `tests/` cite `CLAUDE.md` sections and
   `notes/changes/*.md` change records, neither of which is included in this
