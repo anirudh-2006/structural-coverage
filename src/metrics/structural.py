@@ -43,11 +43,11 @@ destroys every other comparison here.
 TWO THINGS ARE DELIBERATELY NOT REBUILT HERE. `dag_layer` and `in_degree`
 come from the published MathlibGraph release, per CLAUDE.md §4: we extend
 their baseline, we do not re-derive it. NOTE that not re-deriving is why the
-`dag_layer` inversion went unnoticed for three weeks -- the column is
-documented as distance from primitives and is not; see `depth_reach`. Louvain
-communities are computed, because the release does not carry a community
-assignment, and they are cached so the partition is identical across every
-figure in the paper.
+`dag_layer` inversion went unnoticed for three weeks -- we read the column
+as distance from primitives and it behaves as a centrality proxy; see
+`depth_reach`. Louvain communities are computed, because the release does not
+carry a community assignment, and they are cached so the partition is
+identical across every figure in the paper.
 """
 
 from __future__ import annotations
@@ -78,7 +78,7 @@ UNPLACED_LAYER = -1
 def depth_index(g: nx.DiGraph) -> dict[str, int]:
     """Published `dag_layer` per declaration, as released. Not recomputed.
 
-    NOT distance from primitives, despite the release documenting it that way
+    NOT distance from primitives as we had read it
     -- it correlates +0.677 with log in-degree and its top layer is `Eq.refl`.
     See `depth_reach` for the audit and the withdrawal.
     """
