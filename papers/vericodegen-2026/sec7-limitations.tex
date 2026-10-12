@@ -1,0 +1,71 @@
+% Section 7 -- Limitations. Ported from paper/limitations.md (L1-L6) with the
+% material the four-page limit cut restored. Ordered by how much damage each
+% objection does if we do not raise it first. No literal numbers: every figure
+% is a macro from numbers.tex.
+
+\section{Limitations}
+\label{sec:limitations}
+
+Three objections are load-bearing, and we state them first:
+the corpora target different mathematics (L4), the instrument correction is
+measured on one side and transferred to the other (L1), and everything rests on
+one machine corpus (L6).
+
+\paragraph{L1. The correction transfers a human rate to a larger population.}
+Machine-side miss rates are imputed rather than measured, from per-class rates
+measured on human proofs and standardized onto the machine tactic mix.
+Arithmetic-tactic proofs are \machineArithMixPct{}\% of the machine corpus and
+\humanArithMixPct{}\% of mathlib, so most of the machine corpus is standardized
+against a stratum that is a fraction of a percent of mathlib. That rate is
+near-censused and precise; the exposure is that the two populations'
+\texttt{nlinarith} may not be the same object. In mathlib it is typically one
+step closing a residual goal; in the machine corpus it is frequently the whole
+proof. If the extractor's blind spot scales with how much of a proof
+the automation closes rather than with its presence, the transfer
+under-corrects, leaving machine proofs looking narrower than they are, which
+biases toward our own hypothesis. Flat efficiency across human tactic classes
+(Section~\ref{sec:reference-line}) constrains the instrument's behaviour on
+mathlib proofs only; nothing measured here establishes comparable recovery on
+machine proofs, whose dominant stratum has almost no human counterpart. We
+therefore treat the correction as a lower bound and require the gap to clear a
+multiple of it, not merely exceed it. Elaboration-level extraction on the machine corpus would settle it. We did not
+do it because it means reproducing the publishers' extraction pipeline on a
+second corpus (building the premise tool against the same toolchain and
+wrapping each standalone proof as a compilable module), and because those
+proofs were verified against their releasers' mathlib rather than our pinned
+commit, so a fraction would fail on renames and deprecations, giving version
+skew rather than a miss rate.
+
+\paragraph{Instrument limitations.} Four further entries are stated in
+Appendix~\ref{app:limitations}: L2, the asymmetries left in the accounting and
+why every one of them narrows the reported gap; L3, how much of the explicit set source-visible extraction reaches; L3d,
+that Table~\ref{tab:retention}'s quantities are matcher-based; and L3e, that
+our reading of the flag is not validated against elaborated terms.
+
+\paragraph{L4. The corpora target different mathematics.} Machine corpora
+target competition statements and mathlib targets library development, so part
+of L1's tactic-mix difference belongs to the problem sets, not the provers.
+Section~\ref{sec:size-controls} narrows this by matching library
+\emph{area} without removing it, because area is not \emph{genre}. A mathlib
+theorem is general-purpose infrastructure; a competition problem is a
+self-contained puzzle. As an exploratory, not pre-registered check, mathlib's own IMO archive gives
+\genreCheckRatio{}$\times$, the smallest gap of any design we ran. It is a
+lower bound (most of those declarations cite local helper lemmas outside the
+graph's build target), it is not extraction-audited, and it is not
+regenerable from the released artifact (L6). We report it because we measured
+it, and publishing only the designs that give larger gaps would be the
+objectionable choice. We therefore claim a difference
+between these two released corpora under the restrictions named, not a general
+property of how provers use mathlib when proving comparable theorems.
+
+\paragraph{L6. Scope, and what is not regenerable.} One machine corpus,
+\machineProofs{} proofs. These are comparisons of two distributions and not
+causal claims. We write ``machine proofs concentrate on'', never ``provers are
+biased toward''. Two families of figures carried from the prior version are \emph{not}
+reproducible from the released artifact: the per-premise occurrence shares of
+Section~\ref{sec:concentration} and the genre-check figures in L4. Both were
+computed ad hoc, neither table was
+committed, and no released script regenerates them. Every other number comes from a committed result file, bar
+Section~\ref{sec:dag-layer}'s graph-audit figures, which any reader recomputes
+from the released graph in one pass. We flag them rather than recompute them,
+because recomputing after the fact is how a frozen scope stops being one.

@@ -1,0 +1,36 @@
+% Section 3.1 -- what the extractor is, compressed. Mechanics (terminator set,
+% tokenizer, namespace prefixes, keyword list) live in Appendix A.
+% No literal numbers: every figure is a macro from numbers.tex.
+
+\subsection{Source-visible extraction at declaration scope}
+\label{sec:extraction}
+
+The extractor takes two inputs: the mathlib checkout at the pinned revision,
+and the set of declaration names in the published graph. It compiles nothing
+and elaborates nothing, which is what makes it an instrument for the explicit
+subgraph rather than an approximation of the full one.
+
+Its scope is the whole declaration, statement and proof. Explicit edges come
+from the elaborated term of the entire declaration, so a hypothesis contributes
+premises. In \texttt{theorem foo (h : Nat.Prime p)}, \texttt{Nat.Prime} is
+an explicit target. Extracting only what follows \texttt{:=} would drop
+such targets while leaving them in the denominator, which is an under-scoped
+instrument rather than a conservative one. The release ships no source
+positions, so the block is located textually; the locate rate is measured
+rather than assumed, at \auditDeclsLocated{} of \auditDeclsDrawn{} sampled
+declarations.
+
+Within that block the identifier tokens are resolved against the declaration
+set, under the block-location, tokenization, resolution and prefix rules
+Appendix~\ref{app:extractor} gives in full.
+
+Two failure modes matter for reading the results. The first is deliberate: the
+extractor never searches the declaration set by suffix, because resolving
+\texttt{mp} that way would credit every declaration in mathlib whose name ends
+in \texttt{.mp}. Tokens that resolve to nothing therefore stay out of the
+premise set entirely, and the cost of that refusal is the largest component of the
+shortfall below the declaration reference point of Section~\ref{sec:retention}
+(\residualResolutionPct{}\%, Appendix~\ref{app:residual}). The second is
+imposed: dot notation names a declaration only once the type of the local it
+projects from is known, which requires elaboration, so that residue is reported
+rather than resolved.

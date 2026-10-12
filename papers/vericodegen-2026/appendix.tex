@@ -1,0 +1,335 @@
+% Technical appendix. Mechanics and diagnostics moved out of the main text so
+% Section 3 states what the instrument establishes rather than how it is built.
+% Unlimited appendix pages are permitted; the main-text limit is nine.
+% No literal numbers: every figure is a macro from numbers.tex.
+
+\appendix
+
+\section{Extractor mechanics}
+\label{app:extractor}
+
+\paragraph{Locating a declaration block.} The release ships no source
+positions, so a declaration's block is found textually: the declaration
+keyword under any attribute or modifier prefix, extending to the next line that
+begins a top-level command. The terminator set is deliberately broad, because
+the two failure modes are not symmetric. Over-matching truncates a block and
+loses tokens at its tail, while under-matching swallows the following
+declaration and invents them. Failures to locate are dominated by auto-named
+instances, which have no textual declaration site.
+
+\paragraph{Tokenization.} Comments and string literals are blanked to spaces,
+preserving token boundaries; Lean's block comments nest, so they are scanned
+rather than matched by regular expression. Identifier tokens are then taken in
+Lean's own shape, dot-composed, with a leading dot excluded. The \texttt{.mp}
+in \texttt{h.mp} is projection on a local, not a reference to a root-level
+\texttt{mp}. A short keyword list drops tactic names before
+resolution. It is a precision aid rather than the safety net. Every surviving
+token must still resolve against the declaration set, and the list is
+deliberately short, since an over-long one silently excludes real premises that share a name
+with a tactic. Section~\ref{sec:limitations}, L3b, reports the one inconsistency
+we left in it rather than extending it after seeing which names flattered the
+result.
+
+\paragraph{Resolution.} The rule is three steps, first hit wins: the token is a
+fully-qualified declaration name; or it completes to exactly one declaration
+under a namespace prefix in scope; or it resolves to nothing and is kept aside
+as a bare tail. Bare tails never enter the premise set, for the reason
+Section~\ref{sec:extraction} gives.
+
+\paragraph{Namespace prefixes.} The prefixes a bare token may complete under
+are the proper prefixes of the declaration's own name, together with the
+\texttt{open} clauses appearing in its file. Lean scopes \texttt{open} to
+sections and this does not, so the rule is over-permissive, and it can
+complete a token under a namespace not actually open at that point. The cost
+is precision and never recall, and it is carried in the reference line of
+Section~\ref{sec:reference-line}.
+
+\section{Residual below the declaration reference}
+\label{app:residual}
+
+The \residualTargets{} mathematical targets that the declaration reference
+point finds and the extractor misses decompose into three classes.
+\residualResolutionPct{}\% is a definitional gap: the reference point
+substring-matches premise names while the extractor resolves identifiers, and a
+resolved identifier is a stricter object than a matched substring, so closing
+that gap entirely would mean abandoning resolution and buying retention at the
+cost of precision. \residualKeywordPct{}\% is the over-broad keyword list of
+Appendix~\ref{app:extractor}, which suppresses names that are simultaneously
+tactic names and library declarations; we report its cost rather than tuning
+the list after seeing which names it flatters. The remaining
+\residualCommentPct{}\% occurs only inside comments or string literals, which
+the extractor strips by design. The classes are identified rather than merely
+counted, so each is a statement about a mechanism.
+
+Per-class extraction efficiency (achieved retention against the declaration
+reference point, within each tactic class) ranges from
+\efficiencyByClassMin{} to \efficiencyByClassMax{}, with the corpus-level
+figure \efficiencyReachable{} inside that range. Section~\ref{sec:limitations},
+L1, states what this does and does not license about the machine corpus.
+
+\section{Instrument reference line: diagnostics}
+\label{app:reference}
+
+The precision term is carried as an open item in
+Section~\ref{sec:reference-line}, and the diagnostics behind that decision are
+these. Length-controlled on the tactic-step axis the term falls to
+\spuriousStepAxis{}, against \spuriousCharAxis{} on the character axis, a
+near-collapse that read alone would be good news about the instrument. By a
+criterion registered before the run, a control whose collapsed cells carry a
+large share of the machine mix is uninformative rather than clean: here they
+carry \spuriousCollapsedMachineMixPct{}\% of it, dominated by the arithmetic
+stratum of Section~\ref{sec:concentration}. The character axis fails the
+companion criterion of near-disjoint supports, its overlap coefficient being
+\charOverlapSample{}. One diagnostic points somewhere real. Across the two
+axes the imputed human rate is stationary while only the machine rate moves,
+which is the signature of a compositional correction rather than of two
+extrapolations converging, and that makes the step figure the more credible of
+the two without making it something to freeze on.
+
+\section{The tactic-step proxy}
+\label{app:steps}
+
+Counting tactic steps needs an instrument and the obvious one under-records.
+The published tactic lists capture only main-path tactics; everything after
+\texttt{<;>}, inside \texttt{induction \dots\ with} case branches, and in
+nested \texttt{(by simp \dots)} term positions is missing. That is measured
+rather than assumed. Against a string matcher over the same declarations the
+disagreement is almost entirely one-directional, the matcher finding tactics
+the lists omit and rarely the reverse. Both corpora are therefore counted with
+a single fixed tactic vocabulary and one matcher. It is a size proxy, not a
+taxonomy, and a tactic missing from the vocabulary costs sensitivity
+symmetrically. Section~\ref{sec:limitations}, L2, states the consequence for
+every stratum and mix in the paper.
+
+\section{Structural breadth by design}
+\label{app:breadth}
+
+\begin{table}[h]
+\centering
+\caption{Breadth per tactic step, machine minus human, at three scopes, with
+the share of the machine corpus each design retains. The sign does not move;
+the magnitude moves by a factor of four, which is why
+Section~\ref{sec:breadth} quotes a direction and not a magnitude.}
+\label{tab:breadth}
+\small
+\begin{tabular}{lcc}
+\toprule
+Design & Gap & Machine corpus retained \\
+\midrule
+Full corpora   & \breadthGapFull{}    & all \\
+Common support & \breadthGapSupport{} & \supportRetentionMachine{} \\
+Matched 1:1    & \breadthGapMatched{} & \supportRetentionMachine{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two things keep breadth secondary. The community partition is heavily skewed,
+with most communities tiny and a few holding much of the graph, so the unit is
+coarse before any comparison is made; and a quantity whose magnitude depends this strongly on the
+design cannot carry weight on its own. We report it nonetheless because the
+metric was defined before we looked, and omitting an unstable result would be
+selection rather than caution. Breadth also measures how far apart a
+population's premises lie within the library, rather than how much of the
+library that population reaches, so it is not a second reading of coverage.
+
+The excluded region under the last two designs is the set of cells with no
+human counterpart, overwhelmingly the arithmetic stratum of
+Section~\ref{sec:concentration}. An earlier version of this comparison did
+move in sign. Restricting to a length-overlap region gave a positive gap
+against the full corpora's negative one. That region was cut on character
+length, which
+Section~\ref{sec:length-axis} shows to be a formatting control rather than a
+length control, and it retained \charOverlapMachineRetainedPct{}\% of the
+machine corpus. On the wrap-invariant axis the sign is stable at all three
+scopes, so the flip is an artifact of the rejected axis and not a finding.
+
+\section{Limitations L2, L3, L3d and L3e}
+\label{app:limitations}
+
+\paragraph{L2. Instrument asymmetries, and their direction.} Human tactic use
+comes from the publishers' extracted lists and machine tactic use has no
+equivalent, so both sides are cut with the string matcher of
+Section~\ref{sec:length-axis} and Appendix~\ref{app:steps}; the two instruments
+disagree materially and in one direction, and one false positive is kept rather
+than removed after the fact, because the tactic list was frozen before the
+machine corpus was touched. On the extraction side, two artifacts that
+resolved on the human side only (a declaration's own name and the
+\texttt{lemma} keyword) are removed before any reported figure, at a large
+cost to our own headline, and three further asymmetries are left in place: \texttt{symm} and
+\texttt{trans} resolve \symmTransHuman{} times on the human side against
+\symmTransMachine{}, prefix completion supplies far more premises per proof to
+the human side because every machine proof carries the same fixed namespace
+header, and coverage is counted over both hub layers where the mathematical
+layer alone would give \vocabRatioMathOnly{}$\times$ rather than
+\vocabRatio{}$\times$. Every uncorrected asymmetry we have found narrows the
+reported gap, so Section~\ref{sec:coverage}'s figures are floors. The
+corrections we applied cost us, and the ones we declined would have paid us.
+Separately, no aggregate centrality figure appears without the hub layers
+separated and we never infer shallowness from centrality;
+Section~\ref{sec:dag-layer} reports where we broke that rule ourselves.
+
+\paragraph{L3. Extraction cannot recover the explicit set in full.} Sections
+\ref{sec:is-explicit} and \ref{sec:retention} characterize this rather than
+bound it away. The whole-file reference point is \ceilingWholeFile{},
+which no per-declaration instrument beats, and it is a loose-matcher figure
+rather than an attributable bound. The reported vocabularies are
+instrument-filtered.
+
+\paragraph{L3b/L3c. The asymmetries that remain all shrink the gap.} Two
+artifacts that resolved on the human side only, a declaration's own name
+and the \texttt{lemma} keyword, are removed before any reported figure, at a
+large cost to our own headline. Three further asymmetries are
+left in place and all run the same way. \texttt{symm} and \texttt{trans} are
+tactic names that are also mathlib theorems, resolving \symmTransHuman{} times
+on the human side against
+\symmTransMachine{}; we leave
+them rather than extend a keyword list after seeing which names flatter the
+result. Prefix completion supplies far more premises per proof to the human
+side,
+since every machine proof carries the same fixed namespace header while a
+mathlib declaration sits in its own. That is legitimate resolution rather than
+contamination. And coverage is counted over both hub layers, where the
+mathematical layer alone would give \vocabRatioMathOnly{}$\times$ rather than
+\vocabRatio{}$\times$. Every uncorrected asymmetry we have found narrows the
+reported gap, so Section~\ref{sec:coverage}'s figures are floors. The
+corrections we applied cost us, and the ones we declined would have paid us.
+
+\paragraph{L3d. The reference points are matcher-based.} The quantities of
+Table~\ref{tab:retention} are cut with a loose name matcher: a match is
+evidence that a name occurs within the scope, not that the premise was used
+there, and we do not measure how often it credits an incidental occurrence.
+
+\paragraph{L3e. Our reading of the flag is not validated against elaborated
+terms.} The semantics established in Section~\ref{sec:is-explicit} come from
+the release's own parser and the documented behaviour of the tool upstream of
+it, not from elaborating proofs ourselves, which we do not do anywhere in this
+work.
+
+\section{A quarter of the machine vocabulary is not mathematics}
+\label{sec:layer-composition}
+
+The retention figures of Sections~\ref{sec:retention} and
+\ref{sec:reference-line} are quoted on the mathematical layer, using a
+partition of the declaration set by provenance rather than by namespace
+prefix: Lean core constants, instances, coercions, kernel-level kinds and
+compiler-generated names are infrastructure, and the rest is mathematical
+content. Provenance is what makes the partition usable. A prefix rule misses
+every root-level elaborator constant, and it over-captures genuine mathlib
+results whose names happen to sit under an infrastructure namespace.
+Applied to the premise vocabularies themselves rather than to retention
+targets, the same partition says something about the corpora.
+
+The human vocabulary is \humanVocabInfraPct{}\% infrastructure:
+\humanVocabInfra{} declarations against \humanVocabMath{} mathematical ones.
+The machine vocabulary is \machineVocabInfraPct{}\% infrastructure,
+\machineVocabInfra{} against \machineVocabMath{}, a factor of
+\infraWeightRatio{} more infrastructure-weighted. Both vocabularies place
+completely, with no declaration left unclassified on either side.
+
+The machine vocabulary therefore differs from the human one in composition,
+not only in size. A quarter of it is the plumbing of
+Section~\ref{sec:is-explicit} (proof-irrelevance and rewriting machinery that
+every Lean proof drags in and no author selects), so the mathematical working
+vocabulary of the machine
+corpus is \machineVocabMath{} declarations. That is the figure to hold in mind
+next to mathlib's \humanVocabMath{}, since it is the set of mathematical
+results the released corpus actually reaches for, as opposed to the set it
+cites.
+
+This is a membership count and nothing more. Each premise is classified once,
+by provenance, and the two sides are compared by how many fall in each class.
+There is no aggregation over a centrality score, so Li et al.'s Finding~3 does
+not bind here and we draw no inference about mathematical depth from it. A
+vocabulary weighted toward infrastructure is not thereby a shallower one.
+
+This composition sits next to the concentration reported in
+Section~\ref{sec:concentration}, where most of the machine corpus is short
+automation calls. A proof that discharges its goal in one such call still
+elaborates into a term, and that term carries the rewriting and
+proof-irrelevance machinery with it, so the two measurements are consistent
+with one picture of the corpus. We report them as two measurements rather than
+as one explained by the other. For evaluation the consequence is direct. A
+vocabulary that is \machineVocabInfraPct{}\% infrastructure and one that is
+\humanVocabInfraPct{}\% are different objects, and only the second is evidence
+of mathematical range, a distinction no correctness-based metric records.
+
+The split also settles a basis question left open in
+Section~\ref{sec:coverage}. Coverage is reported over both layers. Counting it
+on the mathematical layer alone would give \vocabRatioMathOnly{}$\times$
+rather than \vocabRatio{}$\times$, with a correspondingly higher human-only
+fraction, because the machine vocabulary is more infrastructure-weighted and
+so loses proportionally more under the restriction. We report the both-layer
+basis, which is the weaker of the two for our own hypothesis, and print the
+other here. Where two bases are defensible, the one to keep is the one that
+raises the bar the result has to clear.
+
+\section{A characteristic concentration}
+\label{sec:concentration}
+
+Coverage counts each premise once, which makes it a set rather than a rate and
+is why Section~\ref{sec:coverage} reports it with no per-proof standardization;
+it also makes coverage blind to usage. Counting the same premises once per
+occurrence gives a different picture. The machine corpus resolves
+\machineOccurrences{} premise occurrences from its \machineVocab{} distinct
+premises, against \humanOccurrences{} from \humanVocab{} on the human side, and
+it concentrates on a stratum essentially absent from mathlib: proofs closing in
+at most two steps with an arithmetic-flavoured tactic set are
+\degenerateMachineSharePct{}\% of the machine corpus and
+\degenerateHumanSharePct{}\% of mathlib, \degenerateHumanCount{} of
+\humanProofs{} declarations. We report that as a result rather than as sample
+attrition. It is the largest cell of the machine corpus, it has no human
+counterpart, and it is why the common-support design sets roughly a quarter of
+the machine corpus aside. Usage concentrates to match. \texttt{sq\_nonneg}
+alone accounts for \sqNonnegOccurrencePct{}\% of machine premise occurrences
+and the twenty-five most frequent for \topTwentyFiveOccurrencePct{}\%, both
+descriptive and post-hoc, and both not regenerable from the released artifact
+(Section~\ref{sec:limitations}, L6). A machine proof resolves
+\machinePremisesPerProof{} premises on average against
+\humanPremisesPerProof{} for a human declaration. Coverage and concentration
+are independent and neither substitutes for the other. Heavy reuse of a few
+lemmas is ordinary in competition mathematics, and coverage alone would leave
+open that a shared vocabulary is used comparably.
+
+\section{\texttt{dag\_layer}: the reading under which it is correct}
+\label{app:daglayer}
+
+Section~\ref{sec:dag-layer} records the column as a centrality proxy and the
+error in reading it as depth as ours. The attribute may be behaving as its
+producers intended: if edges run from a declaration to its dependencies and the
+computation seeds at in-degree-zero nodes, a column that puts uncited leaves at
+layer zero and \texttt{Eq.refl} at the top is exactly what the definition
+yields. Nothing here is a defect report against the release.
+
+A second hazard is worth naming for other consumers. \layerTruncatedPct{}\% of
+nodes carry a partial value that never finished propagating and is
+indistinguishable in the published data from a completed one, so a consumer who
+filters or bins on this column is mixing two populations without being told.
+
+\section{What the coverage quantities do and do not read}
+\label{app:construct}
+
+These quantities read no edges. The objection is fair and we state it first.
+Computing $J$ consults only membership, so coverage is a measure on node sets. The
+graph supplies the definition of a node (which names are declarations, and
+which layer each belongs to) rather than the arithmetic. The section headings retain the phrase \emph{structural
+coverage}, and the reader should take it as naming the pair of measures defined
+here rather than as a claim about the coverage arithmetic. Coverage is the
+node-set family; breadth is the edge-derived one.
+
+Two reporting conventions follow from that. We print the intersection count
+beside every Jaccard so each index is recomputable from its own row, and we
+give the human-only quantity as both a count and a fraction, because the two
+vocabularies differ in size by orders of magnitude and a ratio alone would hide
+which side is large. Coverage and breadth also answer different questions and
+can move independently: coverage asks how much of the library a population
+reaches, breadth how spread out that reach is, and a corpus may touch few
+premises scattered across many communities or many premises within one.
+
+The choice is deliberate rather than a convenience. Any edge-reading statistic
+over these subgraphs requires aggregation: a centrality, a path length, a depth.
+Aggregation over this graph is what Li et al.'s Finding~3 shows to be
+uninterpretable unless the two hub layers are separated first, and
+Section~\ref{sec:dag-layer} reports a second instance of the same trap on a
+different quantity. A membership count needs no aggregation, so it needs no such
+split to be read, and it survives controls that reverse or destroy the
+edge-reading quantities.

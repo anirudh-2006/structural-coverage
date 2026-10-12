@@ -1,11 +1,16 @@
-# Structural Coverage: Do AI Provers Use Mathlib the Way Mathematicians Do?
+# Structural Coverage
 
-**MATH-AI @ NeurIPS 2026** — Anirudh Balaji
+Code and committed results for two workshop papers by Anirudh Balaji, both
+built on the same pipeline, code and data:
 
-- **Paper:** [`papers/mathai-2026/main.pdf`](papers/mathai-2026/main.pdf)
+- **MATH-AI @ NeurIPS 2026:** *Structural Coverage: Do AI Provers Use Mathlib
+  the Way Mathematicians Do?* — [`papers/mathai-2026/main.pdf`](papers/mathai-2026/main.pdf)
+- **VeriCodeGen @ NeurIPS 2026:** *A Prover's Share of Mathlib: Measuring
+  Premise Coverage Without Running Lean* — [`papers/vericodegen-2026/main.pdf`](papers/vericodegen-2026/main.pdf)
 
-Code and committed results for the paper above (non-archival workshop track).
-LaTeX source alongside the PDF in [`papers/mathai-2026/`](papers/mathai-2026/).
+Each paper's LaTeX source is alongside its PDF. The Summary and the number
+tables under "Where the paper's numbers come from" below refer to the MATH-AI
+paper; the VeriCodeGen paper has its own section further down.
 
 ## Summary
 
@@ -156,6 +161,87 @@ reported as one.
 - **DeepSeek-Prover-V1 and Goedel-Prover-V2 are not included.** One machine
   corpus only, as stated in the paper's scope.
 
+## VeriCodeGen 2026: A Prover's Share of Mathlib
+
+*A Prover's Share of Mathlib: Measuring Premise Coverage Without Running Lean.*
+AI for Verifiable Coding (VeriCodeGen) Workshop at NeurIPS 2026. PDF and LaTeX
+source in [`papers/vericodegen-2026/`](papers/vericodegen-2026/).
+
+An extended version of the MATH-AI paper above, on the same pipeline, code and
+data. It asks what can be measured about a proof's premise selection from
+released artifacts alone (the published mathlib dependency graph and
+pre-verified proof corpora, with no Lean invocation) and how reliably, and it
+characterizes the extraction instrument before using it. The release's
+explicit-edge flag does not mean "written in source", so retention (0.6124) is
+reported as a scope decomposition: 0.8815 of what a per-declaration instrument
+can reach, the rest not addressable by reading source. Proof length is measured
+on a wrap-invariant axis (tactic steps), not characters. With that instrument,
+mathlib's proofs draw on 78,642 distinct premises against 1,127 for the machine
+corpus: 69.8x on the full corpora, 28.5x restricted to the library regions the
+machine vocabulary occupies, and 18.8x matched on proof count, tactic class and
+proof length. The human-only fraction falls from 98.7% to 96.3% across those
+designs, only 113 premises are machine-only, and 25.6% of the machine vocabulary
+is language infrastructure rather than mathematics. The depth finding is
+withdrawn: we misread the release's per-declaration `dag_layer` attribute as
+distance from primitives, and as we used it, it behaves as a centrality proxy.
+
+### Where the VeriCodeGen numbers come from
+
+Every number in the paper is a macro in
+[`papers/vericodegen-2026/numbers.tex`](papers/vericodegen-2026/numbers.tex),
+whose comment names the CSV, row and column. The table below covers the
+headline numbers in the abstract, Table 1 (retention, §3.3) and Table 2
+(coverage, §5.1, including its caption). Each was checked against the committed
+CSV in this repo.
+
+| Number | Paper | CSV | Row / column | Written by |
+|---|---|---|---|---|
+| **0.6124** achieved retention | abstract, Table 1 | `results/extraction_audit.csv` | `layer="mathematical", matcher="loose"` → `rate` (1,830 / 2,988) | `src/extract/audit.py` |
+| **0.8815** efficiency against the declaration reference | abstract, Table 1 | `results/extraction_audit.csv` | `layer="gate", matcher="efficiency_reachable"` → `rate` | `src/extract/audit.py` |
+| **0.7915** whole-file reference | Table 1 | `results/extraction_audit.csv` | `layer="gate", matcher="efficiency_paired"` → `total` | `src/extract/audit.py` |
+| **0.6948** declaration reference | Table 1 | `results/extraction_audit.csv` | `layer="gate", matcher="efficiency_reachable"` → `total` | `src/extract/audit.py` |
+| **78,642** human vocabulary, full corpora | abstract, Table 2 | `results/coverage_by_policy.csv` | `policy="corrected"` → `human_vocab` | `src/analysis/vocabulary_contamination.py` |
+| **1,127** machine vocabulary, full corpora and area-restricted | abstract, Table 2 | `results/coverage_by_policy.csv` | `policy="corrected"` → `machine_vocab` | `src/analysis/vocabulary_contamination.py` |
+| **69.8x** vocabulary ratio, full corpora | abstract, Table 2 | `results/coverage_area_restricted.csv` | `design="full corpora"` → `ratio` = 69.77994676131323 | `src/analysis/area_restricted.py` |
+| **0.0129** Jaccard, full corpora | Table 2 | `results/coverage_by_policy.csv` | `policy="corrected"` → `jaccard` = 0.012875372992190971 | `src/analysis/vocabulary_contamination.py` |
+| **1,014** intersection, full corpora | Table 2 | `results/coverage_by_policy.csv` | `policy="corrected"` → `intersection` | `src/analysis/vocabulary_contamination.py` |
+| **98.7%** human-only fraction, full corpora | abstract, Table 2 | `results/coverage_by_policy.csv` | `policy="corrected"` → `human_only_fraction` = 0.9871061264972916 | `src/analysis/vocabulary_contamination.py` |
+| **113** machine-only premises | abstract | `results/coverage_by_policy.csv` | `policy="corrected"` → `machine_only` | `src/analysis/vocabulary_contamination.py` |
+| **32,091** human vocabulary, area-restricted | Table 2 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `human_vocab` | `src/analysis/area_restricted.py` |
+| **28.5x** ratio, area-restricted (primary control) | abstract, Table 2 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `ratio` = 28.474711623779946 | `src/analysis/area_restricted.py` |
+| **0.0315** Jaccard, area-restricted | Table 2 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `jaccard` = 0.03148677182958639 | `src/analysis/area_restricted.py` |
+| **1,014** intersection, area-restricted | Table 2 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `intersection` | `src/analysis/area_restricted.py` |
+| **96.8%** human-only fraction, area-restricted | Table 2 | `results/coverage_area_restricted.csv` | `design="restricted — support (PRIMARY)"` → `human_only_fraction` = 0.9684023558006918 | `src/analysis/area_restricted.py` |
+| **21,162** human vocabulary, 1:1 matched | Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `human_vocab` | `src/analysis/common_support.py` |
+| **1,123** machine vocabulary, 1:1 matched | Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `machine_vocab` | `src/analysis/common_support.py` |
+| **18.8x** ratio, 1:1 class- and step-matched | abstract, Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `human_vocab` 21,162 ÷ `machine_vocab` 1,123 = 18.844167408726626 | `src/analysis/common_support.py` |
+| **0.0360** Jaccard, 1:1 matched | Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `jaccard` = 0.03598159081400214 | `src/analysis/common_support.py` |
+| **774** intersection, 1:1 matched | Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `intersection` | `src/analysis/common_support.py` |
+| **96.3%** human-only fraction, 1:1 matched | abstract, Table 2 | `results/coverage_common_support.csv` | `scope="matched_1to1"` → `human_only_fraction` = 0.9634250070881769 | `src/analysis/common_support.py` |
+| **25.6%** machine vocabulary that is language infrastructure | abstract | `results/layer_composition.csv` | `corpus="machine"` → `infrastructure_fraction` = 0.25643300798580304 | `src/analysis/layer_composition.py` |
+| **44.0x** ratio, human corpus rarefied to machine size | Table 2 caption | `results/vocabulary_rarefaction.csv` ÷ `results/coverage_by_policy.csv` | `corpus="human", fraction=0.4244784978455041` → `vocab_mean` 49,601 ÷ `policy="corrected"` → `machine_vocab` 1,127 = 44.01153504880213 | `src/analysis/common_support.py`, `src/analysis/vocabulary_contamination.py` |
+| **70.0x** ratio, common support | Table 2 caption | `results/coverage_common_support.csv` | `scope="common_support"` → `human_vocab` 78,591 ÷ `machine_vocab` 1,123 = 69.98308103294747 | `src/analysis/common_support.py` |
+| **0.0128** Jaccard, common support | Table 2 caption | `results/coverage_common_support.csv` | `scope="common_support"` → `jaccard` = 0.012820024140778858 | `src/analysis/common_support.py` |
+
+The whole-file reference differs between the two papers. The MATH-AI paper
+uses 0.8193, the frozen ceiling measured on its own sample
+(`results/ceiling_analysis.csv`, `layer="mathematical", matcher="loose"` →
+`rate`, 6,196 / 7,563). The VeriCodeGen paper uses 0.7915, the same ceiling
+recomputed on the audit sample, so all four rows of its Table 1 share one sample.
+
+### VeriCodeGen numbers with no committed CSV
+
+`numbers.tex` sources these from something other than a committed CSV in this
+repo:
+
+| Number | Macro | Source given in `numbers.tex` |
+|---|---|---|
+| 308,129 declarations; 8,436,366 edges; 2,178,534 explicit edges; 25.8% explicit; 74.2% synthesized; mathlib commit `534cf0b` | `\graphDeclarations`, `\graphEdges`, `\explicitEdgeCount`, `\explicitEdgePct`, `\synthesizedEdgePct`, `\mathlibPin` | The graph release's own figures, in `data/mathlib_graph/v2/summary.json` (fetched by `scripts/fetch_mathlib_graph.sh`, not committed) |
+| 119,633 declarations at `dag_layer` 0; +0.677 correlation with log in-degree; 13.8% of nodes never dequeued | `\layerZeroNodes`, `\layerCorrLogIndegree`, `\layerTruncatedPct` | A one-pass check over the released graph; no CSV was committed |
+| 5.7x exploratory genre-matched ratio | `\genreCheckRatio` | One-off measurement, no CSV (see "The one number this release cannot regenerate" above) |
+| 187 audit declarations located | `\auditDeclsLocated` | Not in any CSV; recorded in a comment at `src/config.py:129` |
+| 27.0% `sq_nonneg` share; 68.1% top-25 share | `\sqNonnegOccurrencePct`, `\topTwentyFiveOccurrencePct` | `numbers.tex` says "not in any CSV", but `results/premise_concentration.csv` in this repo now carries both (see the MATH-AI table above) |
+
 ## Layout
 
 ```
@@ -169,18 +255,26 @@ src/
 tests/        the extraction audit lives here as an assertion
 results/      committed CSVs
 papers/
-  mathai-2026/  paper source (LaTeX) and compiled PDF
+  mathai-2026/       MATH-AI paper: source (LaTeX) and compiled PDF
+  vericodegen-2026/  VeriCodeGen paper: source (LaTeX), numbers.tex and compiled PDF
 ```
 
 ## Citing
 
-The paper is a non-archival workshop submission.
+The MATH-AI paper is a non-archival workshop submission.
 
 ```bibtex
 @inproceedings{balaji2026structural,
   author    = {Anirudh Balaji},
   title     = {Structural Coverage: Do AI Provers Use Mathlib the Way Mathematicians Do?},
   booktitle = {MATH-AI at NeurIPS 2026},
+  year      = {2026}
+}
+
+@inproceedings{balaji2026share,
+  author    = {Anirudh Balaji},
+  title     = {A Prover's Share of Mathlib: Measuring Premise Coverage Without Running Lean},
+  booktitle = {AI for Verifiable Coding (VeriCodeGen) Workshop at NeurIPS 2026},
   year      = {2026}
 }
 ```

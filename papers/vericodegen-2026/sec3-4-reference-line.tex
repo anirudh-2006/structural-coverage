@@ -1,0 +1,39 @@
+% Section 3.4 -- the instrument reference line, compressed. Diagnostics behind
+% the precision term live in Appendix C. No literal numbers: macros only.
+
+\subsection{The instrument reference line}
+\label{sec:reference-line}
+
+An extractor that recovers part of the explicit set displaces any comparison
+built on its output, so the displacement has to be quantified. We do this with
+a reference line, the human--machine gap the instrument produces on its own.
+
+Two artifacts contribute and they are opposite in kind. Recall failure drops
+premises a declaration really cites; precision failure admits premises it does
+not. They do not cancel, because the corpora differ in the proof styles each
+artifact is worst on, so both displace the comparison the same way and the line
+is their sum. We therefore report it as separate terms rather than as one
+averaged scalar.
+
+The recall term is standardized jointly on tactic class and length bin, on the
+step axis of Section~\ref{sec:length-axis}. It survives that control and
+strengthens under it, from \recallTermClassOnly{} class-only to
+\recallTermJoint{} joint, with a bootstrap interval of (\recallTermCIlow{},
+\recallTermCIhigh{}) and a band of (\recallTermBandLow{},
+\recallTermBandHigh{}) across the precedence orderings of the class partition.
+The correction runs against our own interest, since a larger instrument
+artifact raises the bar our headline result has to clear.
+
+The precision term is the weak point. By a criterion registered before the run
+it is uninformative rather than clean. We therefore carry it as an open item
+rather than folding it into the line, and Appendix~\ref{app:reference} gives
+the diagnostics behind that decision.
+
+Two limits on what this line licenses. Per-class efficiency is close to flat
+(Section~\ref{sec:retention}), which is a stronger neutrality statement than
+the raw per-class miss rates suggest, but it is measured on human proofs,
+and nothing here establishes comparable recovery on machine proofs, which
+Section~\ref{sec:limitations}, L1, states as the paper's load-bearing
+assumption. And the line matters unevenly: the coverage result of
+Section~\ref{sec:coverage} sits far outside the regime these artifacts operate
+in, while the secondary characterizations sit inside it.

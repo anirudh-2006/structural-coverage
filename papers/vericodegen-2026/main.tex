@@ -1,0 +1,159 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2026
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% "default" for submission
+% \usepackage{neurips_2026_vericode}
+% Camera-ready: the .sty's "final" option.
+\usepackage[final]{neurips_2026_vericode}
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% \usepackage[main, final]{neurips_2026_vericode}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2026_vericode}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2026_vericode}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+
+% Figures live in macros, never as literals in prose (paper-vericode/CLAUDE.md).
+\input{numbers}
+
+\title{A Prover's Share of Mathlib: Measuring Premise Coverage
+Without Running Lean}
+
+% Shown in the title footnote, per the template's note above.
+\workshoptitle{AI for Verifiable Coding @ NeurIPS 2026}
+
+% Camera-ready: deanonymized.
+\author{%
+  Anirudh Balaji \\
+  PES University \\
+  Bengaluru, India \\
+  \texttt{PES1UG25AM042@stu.pes.edu} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  A Lean proof the kernel accepts is correct; it is also a \emph{selection} of
+  premises from a library, and \texttt{pass@k} is blind to that selection. We
+  ask what can be measured about it from released artifacts alone (a
+  published mathlib dependency graph and pre-verified proof corpora, with no
+  Lean invocation), and how reliably. The instrument needs characterizing
+  first. The release's explicit-edge flag does not mean ``written in source'',
+  so no source-level extractor, however good, reaches unit retention against
+  it. We therefore report retention as a scope decomposition, at \retention{}, of
+  which \efficiencyReachable{} is what a per-declaration instrument can reach
+  and the rest is not addressable by reading source. That efficiency is
+  flat across tactic classes, so the instrument does not fail preferentially on
+  the proof styles that separate the corpora. We quantify the displacement our
+  own extractor induces, and show that proof length must be measured on a
+  wrap-invariant axis, because character counts measure source formatting
+  rather than proof size. Measured
+  with that instrument, mathlib's proofs draw on \humanVocab{} distinct
+  premises against \machineVocab{} for a released machine corpus:
+  \vocabRatio{}$\times$ on the full corpora, \areaRestrictedRatio{}$\times$
+  restricted to the library regions the machine vocabulary occupies, and
+  \vocabRatioMatched{}$\times$ matched on proof count, tactic class and proof
+  length, with the human-only fraction falling from \humanOnlyFullPct{}\% to
+  \humanOnlyMatchedPct{}\% across those designs. Only \machineOnlyFull{}
+  premises are machine-only, and \machineVocabInfraPct{}\% of the machine
+  vocabulary is language infrastructure rather than mathematics. A depth
+  finding we built on a released per-declaration attribute is withdrawn,
+  because the attribute is a centrality proxy. The one-line check that would
+  have caught it is to correlate a derived attribute against in-degree and
+  inspect its extremes.
+\end{abstract}
+
+\input{sec1-intro}
+
+\input{sec2-background}
+
+\section{The extraction instrument, characterized}
+\label{sec:instrument}
+We characterize the instrument before using it.
+Section~\ref{sec:extraction} states what the extractor does; the four sections
+after it establish what a pipeline of this kind can measure and how reliably:
+what \texttt{is\_explicit} actually means
+(Section~\ref{sec:is-explicit}), what retention can reach against it
+(Section~\ref{sec:retention}), what displacement the extractor induces in the
+comparison (Section~\ref{sec:reference-line}), and which axis proof length
+must be measured on (Section~\ref{sec:length-axis}). The first two are
+properties of the released artifact rather than of our code, and a pipeline
+can consume either without receiving any signal that it has gone wrong.
+
+\input{sec3-1-extraction}
+
+\input{sec3-2-is-explicit}
+
+\input{sec3-3-retention}
+
+\input{sec3-4-reference-line}
+
+\input{sec3-5-length-axis}
+
+\input{sec4-definitions}
+
+\section{Results}
+\label{sec:results}
+This section applies the definitions of Section~\ref{sec:definitions} to the
+two corpora of Section~\ref{sec:background}: coverage and the two
+controls that answer the objections to it
+(Sections~\ref{sec:coverage} and \ref{sec:size-controls}), then
+breadth (Section~\ref{sec:breadth}), reported as unstable. The composition and
+concentration of the machine vocabulary are reported in
+Appendices~\ref{sec:layer-composition} and \ref{sec:concentration}. Two conventions
+hold throughout. Every figure is on the corrected premise sets. Two artifacts
+that resolved on the human side only (a declaration's own name and the
+\texttt{lemma} keyword) are removed before any comparison, at a large cost
+to the human count, and Section~\ref{sec:limitations}, L2, gives the
+accounting. 
+
+\input{sec5-1-coverage}
+
+\input{sec5-2-size-controls}
+
+\input{sec5-6-breadth}
+
+\input{sec6-dag-layer}
+
+\input{sec7-limitations}
+
+\input{sec8-related}
+
+\input{sec9-repro}
+
+\begin{ack}
+This work received no external funding.
+\end{ack}
+
+% Small references, as in the frozen submission. Grouped so it does not
+% also shrink the checklist that follows.
+{\small
+\bibliographystyle{plainnat}
+\bibliography{refs}
+}
+
+\input{appendix}
+
+\input{checklist.tex}
+
+\end{document}

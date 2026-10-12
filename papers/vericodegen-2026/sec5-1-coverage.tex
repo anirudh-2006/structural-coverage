@@ -1,0 +1,78 @@
+% Section 5.1 -- vocabulary coverage. The headline result.
+% Ported from the frozen MATH-AI results section and expanded: intersection
+% counts alongside every Jaccard so each row is recomputable, and the fifth
+% design (common support) that four pages had no room for.
+% No literal numbers: every figure is a macro from numbers.tex.
+% The uncorrected human count is retracted and has no macro by design.
+
+\subsection{Vocabulary coverage}
+\label{sec:coverage}
+
+Over the full corpora the two vocabularies intersect in \intersectionFull{}
+premises, giving a Jaccard index of \jaccardFull{}. \humanOnlyFullPct{}\% of
+the premises mathlib's own proofs cite are never cited by any machine proof in
+the corpus. The asymmetry
+is close to containment. Only \machineOnlyFull{} premises are machine-only, so
+the machine vocabulary is very nearly a subset of the human one rather than a
+different region of the library. Two properties of that small vocabulary are
+reported in the appendix. It is weighted toward language infrastructure rather
+than mathematics, at \machineVocabInfraPct{}\% against the human corpus's
+\humanVocabInfraPct{}\%, leaving a mathematical working vocabulary of
+\machineVocabMath{} declarations (Appendix~\ref{sec:layer-composition}). And
+it is used very unevenly, with proofs closing in at most two steps under an
+arithmetic tactic set making up \degenerateMachineSharePct{}\% of the machine
+corpus against \degenerateHumanSharePct{}\% of mathlib
+(Appendix~\ref{sec:concentration}). Every uncorrected instrument asymmetry we
+have identified narrows the gap reported here rather than widening it, so these
+figures are floors; Appendix~\ref{app:limitations}, L2, enumerates them.
+
+The designs differ in what they are allowed to explain away. The full corpora
+control for nothing. Rarefaction removes the corpus-size advantage by drawing
+the human corpus down to the machine corpus's proof count. Common support
+discards the cells of the (tactic class $\times$ tactic step) grid that only
+one corpus occupies, so no rate is imputed where the other side has no
+population. The area-restricted design keeps only the regions of the library
+the machine vocabulary occupies at all, removing the objection that the two
+corpora are simply doing different mathematics. The matched design is the
+strictest: equal proof counts, equal tactic class, equal step bin.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+design & human & machine & ratio & Jaccard & $|H \cap M|$ & human-only \\
+\midrule
+full corpora & \humanVocab{} & \machineVocab{} & \vocabRatio{}$\times$ & \jaccardFull{} & \intersectionFull{} & \humanOnlyFullPct{}\% \\
+\textbf{area-restricted} & \textbf{\humanVocabAreaRestricted{}} & \textbf{\machineVocab{}} & $\mathbf{\areaRestrictedRatio\times}$ & \textbf{\areaRestrictedJaccard{}} & \textbf{\intersectionAreaRestricted{}} & \textbf{\areaRestrictedHumanOnlyPct{}\%} \\
+1:1 class- and step-matched & \humanVocabMatched{} & \machineVocabMatched{} & \vocabRatioMatched{}$\times$ & \jaccardMatched{} & \intersectionMatched{} & \humanOnlyMatchedPct{}\% \\
+\bottomrule
+\end{tabular}
+\caption{Premise vocabulary under three designs of increasing severity. Each
+row carries its intersection count, so its Jaccard index is recomputable from
+the row alone as $|H \cap M| / (|H| + |M| - |H \cap M|)$. The area-restricted
+row is the primary control (Section~\ref{sec:size-controls}); the matched row
+is the strictest design we ran (Section~\ref{sec:size-controls}). Two further
+designs are reported in the text rather than here: rarefying the human corpus
+to the machine corpus's size gives \vocabRatioRarefied{}$\times$
+(Section~\ref{sec:size-controls}), and restricting to common support gives
+\vocabRatioSupport{}$\times$ at a Jaccard of \jaccardSupport{}, against
+\jaccardFull{} on the full corpora.}
+\label{tab:coverage}
+\end{table}
+
+
+
+The point of the table is the invariance rather than any single row. The ratio
+never leaves the range \vocabRatioMatched{}$\times$ to \vocabRatio{}$\times$,
+and the human-only fraction never falls below \humanOnlyMatchedPct{}\%, under
+controls that variously remove corpus size, proof length, tactic style and
+subject area. The magnitude is design-dependent and we quote the range rather
+than the largest figure; the direction and order of magnitude are not.
+Coverage is also the most stable quantity we measure. Moving from the full
+corpora to common support changes the Jaccard index only in its fourth decimal
+place, \jaccardFull{} to \jaccardSupport{}, while that restriction discards
+roughly a quarter of the machine corpus. The result is therefore not an
+artifact of which proofs happen to be comparable. Every proof on both sides of
+this comparison is verified. Correctness is satisfied throughout, and none of
+the structure in this table is visible to \texttt{pass@k}.

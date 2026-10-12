@@ -1,0 +1,30 @@
+% Section 6 -- the withdrawn finding, compressed to a negative-result
+% paragraph. Framing kept: the error was OURS. The concession that the
+% attribute may behave exactly as documented is now a pointer to Appendix I
+% (app:daglayer), not stated here. Never quote the withdrawn depth figures.
+
+\section{A withdrawn finding: \texttt{dag\_layer} and the catching check}
+\label{sec:dag-layer}
+
+The graph release publishes a per-declaration attribute, \texttt{dag\_layer},
+which we took to be distance from primitives. We built a depth metric on it,
+measured a machine--human gap, and promoted that gap to a stated
+counter-finding. The column is not a depth measure as we used it: layer zero
+holds \layerZeroNodes{} declarations whose maximum in-degree is zero (uncited
+leaves, not axioms), the highest layer holds \texttt{Eq.refl}, \texttt{Set}
+and \texttt{LE.le}, and the column correlates \layerCorrLogIndegree{} with log
+in-degree, so a high value means heavily cited infrastructure and the scale runs
+opposite to the direction we read into it. The error was ours, and
+Appendix~\ref{app:daglayer} gives the reading of the column under which it
+behaves as documented, together with a second hazard for other consumers of the
+release. What we measured is therefore a centrality proxy, and a
+difference in it is a statement about citation weight rather than derivation
+length. That is the inference \citet{li2026network} rule out in their
+Finding~3, which we cite in Section~\ref{sec:background} and then walked into
+on a different column of the same release. We withdraw the metric rather than
+re-pointing it at a claim about centrality that it would support, because
+choosing a quantity's meaning after seeing its comparison is a researcher
+degree of freedom. The check that would have caught it is cheap enough to run
+on any released structural attribute before building on it: correlate the
+attribute against in-degree, then inspect its extremes and ask whether the
+declarations at each end match the meaning its name implies.

@@ -1,0 +1,30 @@
+% Section 8 -- related work, half a page. Every citation kept with its
+% differentiating claim; the paper-by-paper elaboration is gone.
+
+\section{Related work}
+\label{sec:related}
+
+\citet{li2026network} give the multilayer analysis of mathlib4 this work
+consumes (the graph, the explicit/synthesized distinction, the two-layer hub
+structure) and pose structural drift from machine-generated proofs as future
+work; we extend their human baseline to a machine population rather than building a
+baseline.
+
+Premise retrieval asks which declarations should close a given goal and scores
+a ranking against the premises a human cited. \citet{leandojo} supply that
+setting and its annotations, and \citet{cslibpremise} establish source-visible
+extraction for it, the precedent for our instrument. We run the relation
+backwards, asking what the selection of already-verified proofs looks like in
+aggregate against a library, with no right answer per goal. A retriever can
+score well on every goal it is given while the population it serves still
+occupies a small region of the library.
+
+Three lines measure past correctness and each differs in its unit.
+\citet{theorembench} score partial progress \emph{within} a theorem;
+\citet{proofrank} characterize a proof text through proxies and pairwise
+comparison, needing a preference model where ours needs none;
+\citet{verisoftbench} correlate success with transitive dependency closure
+size, a magnitude where coverage is a location, in a domain where the graph is
+a build artifact. Our corpora are the released \citet{goedelprover} proof set
+and mathlib itself; \citet{minif2f} appears for what it lacks, the human Lean~4
+proofs that would permit a same-problem comparison.

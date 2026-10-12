@@ -1,0 +1,61 @@
+% Section 2 -- background. Orientation for a verification reader who may not
+% know mathlib's internals. Tight: everything here exists to make Sections 3-6
+% readable. No literal numbers: every figure is a macro from numbers.tex.
+
+\section{Background}
+\label{sec:background}
+
+\paragraph{mathlib4 and why its dependencies form a graph worth studying.}
+Lean~4's mathematical library is a single shared development whose declarations
+are each checked against a kernel, so the proof term one elaborates to names
+exactly the other declarations it depends on. ``What is used to prove what'' is
+recorded mechanically across the whole library, with no citation practice or
+bibliographic convention standing between the record and the reasoning.
+
+\paragraph{The published graph.} \citet{li2026network} analyse that structure at
+three granularities (declarations, the modules that contain them and their
+imports, and namespaces) and release the graph itself. We consume the
+declaration layer and do not rebuild it: \graphDeclarations{} declarations and
+\graphEdges{} dependency edges, pinned at mathlib commit \mathlibPin{}
+(February 2026). Working from the release rather than from our own extraction
+is what makes the human side of this paper comparable to theirs.
+
+\paragraph{Most dependency edges were never written by anyone.} The finding that
+shapes this work is that only \explicitEdgeCount{} of those edges
+(\explicitEdgePct{}\%) are \emph{explicit}; the remaining
+\synthesizedEdgePct{}\% are synthesized during elaboration, arriving through
+instance resolution, unification and tactic machinery rather than from anything
+in the source a contributor typed. A dependency graph read whole is therefore
+substantially a record of what the compiler did. Li et al.\ identify the
+explicit subgraph as the closer proxy for human-intended dependency structure,
+and that subgraph is our object of study throughout. It also settles our
+instrument. Source-visible extraction (Section~\ref{sec:extraction}) is the
+correct tool for that object rather than a compromise against a fuller one.
+What \texttt{explicit} does and does not mean is a separate question, and
+Section~\ref{sec:is-explicit} takes it up.
+
+\paragraph{The two corpora, and the difference between them.} Our human
+reference is mathlib itself: the \humanProofs{} declarations of the pinned
+checkout that carry a located source block. Our machine corpus is a released
+set of \machineProofs{} Lean proofs produced by a prover we did not run
+\citep{goedelprover}, and its statements come from Lean Workbook
+(competition problems). The larger difference is what the two are for. A mathlib declaration is general-purpose
+infrastructure written to be reused; a competition proof is a self-contained
+puzzle. That difference is a property of the released corpora rather than of
+provers, and it is the confound this comparison cannot remove. We state it
+here rather than deferring it: Section~\ref{sec:size-controls} narrows it by
+matching library area and Section~\ref{sec:limitations}, L4, bounds what the
+result can mean in its presence.
+
+\paragraph{Centrality measures technical utility, not mathematical depth.}
+Their third finding constrains every structural claim we make. The most heavily
+cited declarations in this graph are language infrastructure, and they identify
+a two-layer hub structure separating it from mathematical results proper. We
+adopt both consequences: no aggregate centrality figure without the layers
+separated, and ``more central'' never read as ``less deep'', an inference
+\citet{li2026network} contradict in print and
+Section~\ref{sec:dag-layer} records us failing to respect.
+
+Li et al.\ pose structural drift, as machine-generated proofs enter the library,
+as future work. This paper measures a machine population against their human
+baseline.

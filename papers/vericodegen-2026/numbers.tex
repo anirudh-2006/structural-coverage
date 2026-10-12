@@ -1,0 +1,295 @@
+% numbers.tex - every reported figure in this paper, as a macro.
+%
+% Rule (paper-vericode/CLAUDE.md): no literal number appears in prose.
+% Every macro below is transcribed from a committed CSV under ../results/.
+% Each comment names the source file, the row selector, and the column.
+% Macros ending in "Pct" render a percentage: either 100x a named fraction
+% column, or a figure already recorded as a percentage and transcribed as one.
+% Each macro's own comment says which. Every other transformation in this file is arithmetic on
+% committed values and prints its own formula in the macro's comment: the
+% derived block near the end (quotients) and \stepOverlapCensus (a column sum).
+
+% ---------------------------------------------------------------------------
+% Corpus sizes
+% ---------------------------------------------------------------------------
+\newcommand{\humanProofs}{70,086}      % results/coverage_common_support.csv, scope=full, human_proofs
+\newcommand{\machineProofs}{29,750}    % results/coverage_common_support.csv, scope=full, machine_proofs
+\newcommand{\humanProofsSupport}{70,013} % results/coverage_common_support.csv, scope=common_support, human_proofs
+\newcommand{\matchedProofs}{22,785}    % results/coverage_common_support.csv, scope=matched_1to1, machine_proofs
+
+% ---------------------------------------------------------------------------
+% Coverage - full corpora, corrected premise sets (H2a headline)
+% The uncorrected `raw` policy row (118,514 / 0.0089 / 99.1%) is retracted and
+% is deliberately not given a macro.
+% ---------------------------------------------------------------------------
+\newcommand{\humanVocab}{78,642}       % results/coverage_by_policy.csv, policy=corrected, human_vocab
+\newcommand{\machineVocab}{1,127}    % results/coverage_by_policy.csv, policy=corrected, machine_vocab
+\newcommand{\vocabRatio}{69.8}         % results/coverage_area_restricted.csv, design=full corpora, ratio (69.77994676131323)
+\newcommand{\jaccardFull}{0.0129}      % results/coverage_by_policy.csv, policy=corrected, jaccard (0.012875372992190971)
+\newcommand{\intersectionFull}{1,014} % results/coverage_by_policy.csv, policy=corrected, intersection
+\newcommand{\humanOnlyFullPct}{98.7}   % results/coverage_by_policy.csv, policy=corrected, human_only_fraction (0.9871061264972916), x100
+\newcommand{\machineOnlyFull}{113}     % results/coverage_by_policy.csv, policy=corrected, machine_only
+
+% ---------------------------------------------------------------------------
+% Coverage - common support and 1:1 matched designs
+% ---------------------------------------------------------------------------
+\newcommand{\humanVocabSupport}{78,591} % results/coverage_common_support.csv, scope=common_support, human_vocab
+\newcommand{\machineVocabSupport}{1,123} % results/coverage_common_support.csv, scope=common_support, machine_vocab
+\newcommand{\jaccardSupport}{0.0128}   % results/coverage_common_support.csv, scope=common_support, jaccard (0.012820024140778858)
+\newcommand{\intersectionSupport}{1,009} % results/coverage_common_support.csv, scope=common_support, intersection
+\newcommand{\humanOnlySupportPct}{98.7} % results/coverage_common_support.csv, scope=common_support, human_only_fraction (0.9871613798017584), x100
+\newcommand{\humanVocabMatched}{21,162}  % results/coverage_common_support.csv, scope=matched_1to1, human_vocab
+\newcommand{\machineVocabMatched}{1,123} % results/coverage_common_support.csv, scope=matched_1to1, machine_vocab
+\newcommand{\jaccardMatched}{0.0360}   % results/coverage_common_support.csv, scope=matched_1to1, jaccard (0.03598159081400214)
+\newcommand{\intersectionMatched}{774} % results/coverage_common_support.csv, scope=matched_1to1, intersection
+\newcommand{\humanOnlyMatchedPct}{96.3} % results/coverage_common_support.csv, scope=matched_1to1, human_only_fraction (0.9634250070881769), x100
+
+% ---------------------------------------------------------------------------
+% Coverage - corpus-size and region controls
+% ---------------------------------------------------------------------------
+\newcommand{\humanVocabRarefied}{49,601} % results/vocabulary_rarefaction.csv, corpus=human fraction=0.4244784978455041 (proofs=29,750), vocab_mean
+\newcommand{\rarefiedFivePctProofs}{3,504} % results/vocabulary_rarefaction.csv, corpus=human fraction=0.05, proofs
+\newcommand{\humanVocabRarefiedFivePct}{11,493} % results/vocabulary_rarefaction.csv, corpus=human fraction=0.05, vocab_mean (11493.4)
+\newcommand{\humanVocabAreaRestricted}{32,091} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), human_vocab
+\newcommand{\areaRestrictedRatio}{28.5} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), ratio (28.474711623779946)
+\newcommand{\areaRestrictedJaccard}{0.0315} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), jaccard (0.03148677182958639)
+\newcommand{\intersectionAreaRestricted}{1,014} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), intersection; equal to \intersectionFull because the restriction drops no machine premise
+\newcommand{\areaRestrictedHumanOnlyPct}{96.8} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), human_only_fraction (0.9684023558006918), x100
+\newcommand{\areaRegionsMachine}{42}    % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), n_regions
+\newcommand{\areaRegionsHuman}{1,595}  % results/coverage_area_restricted.csv, design=full corpora, n_regions
+\newcommand{\areaHumanSurvivalPct}{40.8} % results/coverage_area_restricted.csv, design=restricted - support (PRIMARY), human_survival (0.40806439307240405), x100
+% Registered sensitivity S1. Reported because its machine leakage is the
+% reason the support rule, not the top-12 decomposition, is primary.
+\newcommand{\areaTopTwelveRatio}{19.2} % results/coverage_area_restricted.csv, design=S1 restricted - top-12 only, ratio (19.248071979434446)
+\newcommand{\areaTopTwelveMachineLeakPct}{31.0} % results/coverage_area_restricted.csv, design=S1 restricted - top-12 only, machine_leak (0.30967169476486245), x100
+
+% ---------------------------------------------------------------------------
+% Extraction instrument - retention decomposition (mathematical layer, loose matcher)
+% ---------------------------------------------------------------------------
+\newcommand{\ceilingWholeFile}{0.7915} % results/extraction_audit.csv, layer=gate matcher=efficiency_paired, total
+\newcommand{\reachableBound}{0.6948}   % results/extraction_audit.csv, layer=gate matcher=efficiency_reachable, total
+\newcommand{\retention}{0.6124}        % results/extraction_audit.csv, layer=mathematical matcher=loose, rate
+\newcommand{\efficiencyReachable}{0.8815} % results/extraction_audit.csv, layer=gate matcher=efficiency_reachable, rate
+
+% ---------------------------------------------------------------------------
+% Instrument reference line (Section 3.4).
+%
+% WHICH FILE CARRIES THE REFERENCE LINE. The frozen line is the STEP-AXIS
+% JOINT value and it lives in results/length_controlled_reference.csv
+% (src/config.py: H2_INSTRUMENT_REFERENCE = 0.099, CI (0.068, 0.126),
+% band (0.076, 0.126), H2_INSTRUMENT_REFERENCE_AXIS = "steps").
+% results/instrument_reference.csv is NOT that file: it carries the earlier,
+% UNCONTROLLED class-only gap on a different sample (n=1,679 class-targeted,
+% against n=7,531 for the standardization). It is deliberately not macro'd
+% here -- a labelled macro for a superseded value is still a value a later
+% session can quote by reaching for the obvious-sounding name.
+% ---------------------------------------------------------------------------
+
+% Recall term -- the reference line proper. Joint standardization on
+% (tactic class x length bin), step axis.
+\newcommand{\recallTermClassOnly}{0.0748} % results/length_controlled_reference.csv, axis=steps, gap_class_only (0.07479504334853565)
+\newcommand{\recallTermJoint}{0.0986}     % results/length_controlled_reference.csv, axis=steps, gap_joint (0.09855205523992183)
+\newcommand{\recallTermCIlow}{0.0678}     % results/length_controlled_reference.csv, axis=steps, ci_low (0.0678314769103629)
+\newcommand{\recallTermCIhigh}{0.1256}    % results/length_controlled_reference.csv, axis=steps, ci_high (0.12564349773213496)
+\newcommand{\recallTermBandLow}{0.0762}   % results/length_controlled_reference.csv, axis=steps, band_low (0.07619722282459518); 24 precedence orderings
+\newcommand{\recallTermBandHigh}{0.1257}  % results/length_controlled_reference.csv, axis=steps, band_high (0.1256745904744775); 24 precedence orderings
+
+% Precision term, both axes. Negative: the machine side carries the LOWER
+% spurious rate, so the term displaces the comparison the same way the recall
+% term does rather than cancelling it. Wrapped in \ensuremath so the minus
+% sign sets as a minus and not a hyphen.
+\newcommand{\spuriousStepAxis}{\ensuremath{-0.0142}} % results/spurious_length_controlled.csv, axis=steps, gap_joint (-0.014167715009446358)
+\newcommand{\spuriousCharAxis}{\ensuremath{-0.1917}} % results/spurious_length_controlled.csv, axis=chars, gap_joint (-0.1917329526614106)
+
+% The diagnostic that disqualifies the step-axis precision term: the share of
+% the machine mix sitting in cells with no usable human rate. Dominated by the
+% arith x 0-2 cell (\degenerateMachineSharePct{}% of the corpus) but not
+% identical to it -- two thin decide cells carry the rest.
+\newcommand{\spuriousCollapsedMachineMixPct}{24.1} % results/spurious_length_controlled.csv, axis=steps, collapsed_machine_mix (0.2408739495798319), x100
+
+% ---------------------------------------------------------------------------
+% Length overlap between the corpora, by axis
+%
+% TWO step-axis values exist and they are not interchangeable. The census
+% figure is the one the paper quotes; the sample figure is what the
+% standardization was actually cut on. Section 3.5 carries a footnote naming
+% both, so both are macro'd rather than one being silently preferred.
+% The char figure is on the sample basis, hence \charOverlapSample: the name
+% says which basis, as it does for the two step-axis macros above.
+% ---------------------------------------------------------------------------
+\newcommand{\stepOverlapCensus}{0.8563} % results/length_overlap.csv, axis=steps, sum of overlap_mass over all six bins (0.26077310924369745 + 0.2699831932773109 + 0.18574322974631166 + 0.0994207116970579 + 0.034743029991724454 + 0.00561344537815126 = 0.8562767193342535); full census, both corpora
+\newcommand{\stepOverlapSample}{0.8599} % results/length_controlled_reference.csv, axis=steps, overlap_coefficient (0.8599090577074936); n=7,531 standardization sample, NOT the census
+\newcommand{\charOverlapSample}{0.2151} % results/length_controlled_reference.csv, axis=chars, overlap_coefficient (0.21511587708450383)
+
+% ---------------------------------------------------------------------------
+% Automation stratum shares (string matcher, censused mixes)
+% ---------------------------------------------------------------------------
+\newcommand{\humanArithMixPct}{0.7}    % results/tactic_class_mix.csv, corpus=human_mathlib instrument=matcher, arith (0.006777387780726536), x100
+\newcommand{\machineArithMixPct}{76.4} % results/tactic_class_mix.csv, corpus=machine_goedel instrument=matcher, arith (0.7638655462184873), x100
+\newcommand{\humanNoneMixPct}{53.4}    % results/tactic_class_mix.csv, corpus=human_mathlib instrument=matcher, none (0.5341437662300602), x100
+\newcommand{\machineNoneMixPct}{4.0}   % results/tactic_class_mix.csv, corpus=machine_goedel instrument=matcher, none (0.04016806722689076), x100
+
+% ---------------------------------------------------------------------------
+% H2c - the degenerate cell (arith x 0-2 tactic steps)
+% ---------------------------------------------------------------------------
+\newcommand{\degenerateMachineSharePct}{23.1} % results/common_support_cells.csv, cell=arith x 0-2, machine_share (0.230890756302521), x100
+\newcommand{\degenerateHumanSharePct}{0.02}   % results/common_support_cells.csv, cell=arith x 0-2, human_share (0.00019975458722141368), x100
+\newcommand{\degenerateHumanCount}{14}        % results/common_support_cells.csv, cell=arith x 0-2, human_n
+\newcommand{\degenerateMachineCount}{6,869} % results/common_support_cells.csv, cell=arith x 0-2, machine_n
+
+% ---------------------------------------------------------------------------
+% The published graph (Section 2). These are the RELEASE's own figures, not
+% our measurements: data/mathlib_graph/v2/summary.json, fetched at the pinned
+% revision by scripts/fetch_mathlib_graph.sh and published with
+% arXiv:2604.24797. Not under results/ because we did not compute them; they
+% are reproducible by fetching the release.
+% ---------------------------------------------------------------------------
+\newcommand{\graphDeclarations}{308,129}  % summary.json, declaration_graph.node_count
+\newcommand{\graphEdges}{8,436,366}       % summary.json, declaration_graph.edge_count_raw
+\newcommand{\explicitEdgeCount}{2,178,534} % summary.json, declaration_graph.explicit_edge_count
+\newcommand{\explicitEdgePct}{25.8}       % summary.json, declaration_graph.explicit_edge_ratio (0.2582), x100
+\newcommand{\synthesizedEdgePct}{74.2}    % summary.json, declaration_graph.synthesized_edge_ratio (0.7418), x100
+\newcommand{\mathlibPin}{534cf0b}         % summary.json, snapshot.mathlib_commit; snapshot_date 2026-02-02, lean4:v4.28.0-rc1
+
+% ---------------------------------------------------------------------------
+% The dag_layer audit (Section 6).
+%
+% NOT IN results/. Unlike the two families flagged in Section 7's L6, these are
+% recomputable in one pass over the released graph -- they ARE the check that
+% section recommends -- but no CSV of them was committed. Source:
+% notes/changes/2026-08-23-depth-definition-audit.md, "The inversion is
+% confirmed directly against main's own data".
+% ---------------------------------------------------------------------------
+\newcommand{\layerZeroNodes}{119,633}   % declarations at dag_layer 0; maximum in_degree among them is 0
+\newcommand{\layerCorrLogIndegree}{\ensuremath{+0.677}} % corr(dag_layer, log1p(in_degree)) = +0.6766
+\newcommand{\layerTruncatedPct}{13.8}   % 42,520 of 308,129 nodes never dequeued (13.80%): 5,732 published as -1, 36,788 carrying a partial value indistinguishable from a completed one
+
+% ---------------------------------------------------------------------------
+% Limitations (Section 7).
+% ---------------------------------------------------------------------------
+\newcommand{\symmTransHuman}{5,222}  % results/vocabulary_contamination.csv, corpus=human, unexcluded_tactic_name_occurrences
+\newcommand{\symmTransMachine}{14}   % results/vocabulary_contamination.csv, corpus=machine, unexcluded_tactic_name_occurrences
+
+% NOT IN ANY CSV, and not regenerable: the Archive/Imo genre check was an
+% ad-hoc read-only measurement, so it fails the regeneration rule by its own
+% record's admission. Committed in prose only: paper/main.tex (tag
+% mathai26-submitted), Limitations, and
+% notes/changes/2026-09-04-archive-imo-exploratory.md. EXPLORATORY and NOT
+% PRE-REGISTERED; never to be reported as a control.
+\newcommand{\genreCheckRatio}{5.7}   % exploratory genre-matched ratio, Archive/Imo against the machine corpus rarefied to the same proof count
+
+% ---------------------------------------------------------------------------
+% Structural breadth (Section 5.6). Differences of committed column values,
+% machine minus human, on breadth_per_step. SIGN IS STABLE AND NEGATIVE AT ALL
+% THREE SCOPES on the tactic-step axis; the magnitude moves 4x, so all three
+% are quoted together and none alone (CLAUDE.md section 3).
+% ---------------------------------------------------------------------------
+\newcommand{\breadthGapFull}{\ensuremath{-0.607}}    % 0.5139311790735444 - 1.1211735884383387; results/metrics_common_support.csv, breadth_per_step, machine/full minus human/full
+\newcommand{\breadthGapSupport}{\ensuremath{-0.780}} % 0.3423192580402258 - 1.1217692880922787; results/metrics_common_support.csv, breadth_per_step, machine/support minus human/support
+\newcommand{\breadthGapMatched}{\ensuremath{-0.201}} % 0.3423192580402258 - 0.543314918597603; results/metrics_common_support.csv, breadth_per_step, machine/matched minus human/matched
+
+% Machine mass under the RETRACTED character-axis overlap region, quoted only
+% to say how little of the corpus the withdrawn sign flip rested on. The flip
+% itself (-0.80 -> +0.04) is a character-axis artifact and must never be
+% quoted as a result: notes/changes/2026-08-19-common-support-step-axis.md.
+\newcommand{\charOverlapMachineRetainedPct}{14.3} % 4,248/29,750 = 0.14279; results/metrics_by_length_slice.csv, n at machine/overlap over machine/full
+
+% ---------------------------------------------------------------------------
+% Usage concentration (Section 5.5). These are OCCURRENCE counts, not
+% membership counts: a premise is counted once per use, where the coverage
+% block above counts it once per corpus.
+% ---------------------------------------------------------------------------
+\newcommand{\humanOccurrences}{437,062}   % results/vocabulary_contamination.csv, corpus=human, occurrences_corrected
+\newcommand{\machineOccurrences}{61,897}  % results/vocabulary_contamination.csv, corpus=machine, occurrences_corrected
+\newcommand{\humanPremisesPerProof}{6.24}   % results/coverage_by_policy.csv, policy=corrected, human_premises_per_proof (6.2360813857261075)
+\newcommand{\machinePremisesPerProof}{2.08} % results/coverage_by_policy.csv, policy=corrected, machine_premises_per_proof (2.0805714285714285)
+
+% NOT IN ANY CSV. Per-premise occurrence shares were computed for the frozen
+% MATH-AI submission and the per-premise table was not committed to results/.
+% Both figures are committed in prose: paper/main.tex (tag mathai26-submitted),
+% subsection "A characteristic concentration", and notes/decisions.md:1048.
+% They are DESCRIPTIVE AND POST-HOC and are labelled as such where used; the
+% source line records them alongside the withdrawn depth analysis, so they must
+% not be read as supporting any depth claim.
+\newcommand{\sqNonnegOccurrencePct}{27.0}  % share of machine premise occurrences
+\newcommand{\topTwentyFiveOccurrencePct}{68.1} % top-25 machine premises, share of machine premise occurrences
+
+% ---------------------------------------------------------------------------
+% Derived figures. Each is a quotient of already-committed, already-reported
+% values; the formula is printed so a reviewer can check it against the CSVs
+% without reconstructing anything. No new analysis (paper-vericode/CLAUDE.md).
+% ---------------------------------------------------------------------------
+
+% Per-class extraction efficiency = achieved retention / reachable-bound retention
+%   = (1 - extractor) / (1 - reachable), both columns of
+%     results/instrument_penalty_decomposition.csv (miss rates, partition basis).
+% Corpus-level efficiency is \efficiencyReachable = 0.8815, which sits inside
+% this range.
+\newcommand{\efficiencyArith}{0.8945}  % (1-0.4924816039244961)/(1-0.43265436706835875), instrument_penalty_decomposition.csv class=arith, extractor & reachable
+\newcommand{\efficiencySimp}{0.8743}   % (1-0.5165661161111661)/(1-0.44703787953713775), instrument_penalty_decomposition.csv class=simp, extractor & reachable
+\newcommand{\efficiencyDecide}{0.8963} % (1-0.3252788104089219)/(1-0.24721189591078066), instrument_penalty_decomposition.csv class=decide, extractor & reachable
+\newcommand{\efficiencyOther}{0.8829}  % (1-0.6135211267605634)/(1-0.5622535211267605), instrument_penalty_decomposition.csv class=other, extractor & reachable
+\newcommand{\efficiencyNone}{0.8871}   % (1-0.31463628396143734)/(1-0.22743207712532865), instrument_penalty_decomposition.csv class=none, extractor & reachable
+\newcommand{\efficiencyByClassMin}{0.8743} % min over the five classes above (simp)
+\newcommand{\efficiencyByClassMax}{0.8963} % max over the five classes above (decide)
+
+% Rarefaction curve shape. Both corpora are still gaining vocabulary at full
+% size, so both counts are lower bounds; these are the last-quartile gains,
+% which say how fast each curve is flattening.
+\newcommand{\rarefactionLastQuarterMachine}{103} % 1127.0 - 1024.4 = 102.6; vocabulary_rarefaction.csv, corpus=machine, vocab_mean at fraction=1.0 minus fraction=0.75
+\newcommand{\rarefactionLastQuarterHuman}{10,667} % 78642.0 - 67975.4 = 10666.6; vocabulary_rarefaction.csv, corpus=human, vocab_mean at fraction=1.0 minus fraction=0.75
+% Half-range of the seeded draws, as a percentage of the mean, at a quarter of
+% the human corpus. NOT the widest spread on the curve: the draws are wider at
+% smaller n (1.9% at fraction=0.05) and tighter at larger n (0.12% at 0.75).
+% The quarter-corpus point is quoted because it is the size band the 1:1
+% matched design draws in (22,785 of 70,086 human proofs, 32.5%).
+\newcommand{\rarefactionDrawSpreadPct}{0.4} % (36,102 - 35,793)/2/35,910 = 0.0043; vocabulary_rarefaction.csv, corpus=human fraction=0.25, vocab_max, vocab_min, vocab_mean
+
+% Vocabulary ratios under the two size controls.
+\newcommand{\vocabRatioRarefied}{44.0} % \humanVocabRarefied / \machineVocab = 49,601/1,127 = 44.0115; vocabulary_rarefaction.csv (human, fraction=0.4244784978455041, vocab_mean) over coverage_by_policy.csv (policy=corrected, machine_vocab)
+\newcommand{\vocabRatioSupport}{70.0}  % \humanVocabSupport / \machineVocabSupport = 78,591/1,123 = 69.9831; both from coverage_common_support.csv, scope=common_support
+% Mathematical-layer-only basis, the robustness row for the reported
+% both-layer coverage. Quotient of two committed layer counts.
+\newcommand{\vocabRatioMathOnly}{89.6} % \humanVocabMath / \machineVocabMath = 75,063/838 = 89.5740; both from results/layer_composition.csv, mathematical
+\newcommand{\vocabRatioMatched}{18.8}  % \humanVocabMatched / \machineVocabMatched = 21,162/1,123 = 18.8442; both from coverage_common_support.csv, scope=matched_1to1
+
+% Fraction of each corpus retained by the common-support restriction.
+\newcommand{\supportRetentionHuman}{0.9990}   % \humanProofsSupport / \humanProofs = 70,013/70,086 = 0.998958; coverage_common_support.csv, human_proofs at scope=common_support over scope=full
+\newcommand{\supportRetentionMachine}{0.7659} % \matchedProofs / \machineProofs = 22,785/29,750 = 0.765882; coverage_common_support.csv, machine_proofs at scope=common_support over scope=full
+
+% Audit sample. NOT in any CSV: results/extraction_audit.csv records only the
+% 198 drawn declarations (layer=gate matcher=worst_case, total). The located
+% count is committed in prose and in code:
+%   notes/changes/2026-08-16-extraction-audit-first-run.md ("187 declarations
+%   located, 11 not (94.4% locate rate)"), notes/decisions.md:512, and
+%   src/config.py:129 (comment on AUDIT_RETENTION_RECORDED).
+\newcommand{\auditDeclsLocated}{187}
+\newcommand{\auditDeclsDrawn}{198}     % results/extraction_audit.csv, layer=gate matcher=worst_case, total
+\newcommand{\auditTargets}{2,988}      % results/extraction_audit.csv, layer=mathematical matcher=loose, total
+
+% ---------------------------------------------------------------------------
+% Layer composition of the two premise vocabularies (M2.3, M6).
+% Counts are set-membership against the frozen provenance partition
+% (graph.load.split_hub_layers); no aggregation, so Li et al.'s Finding 3 does
+% not bind. Both vocabularies place fully: unplaced = 0 on each side.
+% ---------------------------------------------------------------------------
+\newcommand{\humanVocabInfra}{3,579}   % results/layer_composition.csv, corpus=human, infrastructure
+\newcommand{\humanVocabMath}{75,063}   % results/layer_composition.csv, corpus=human, mathematical
+\newcommand{\humanVocabInfraPct}{4.6}  % results/layer_composition.csv, corpus=human, infrastructure_fraction (0.045510032806897076), x100
+\newcommand{\humanVocabMathPct}{95.4}  % results/layer_composition.csv, corpus=human, mathematical_fraction (0.954489967193103), x100
+\newcommand{\machineVocabInfra}{289}   % results/layer_composition.csv, corpus=machine, infrastructure
+\newcommand{\machineVocabMath}{838}    % results/layer_composition.csv, corpus=machine, mathematical
+\newcommand{\machineVocabInfraPct}{25.6} % results/layer_composition.csv, corpus=machine, infrastructure_fraction (0.25643300798580304), x100
+\newcommand{\machineVocabMathPct}{74.4}  % results/layer_composition.csv, corpus=machine, mathematical_fraction (0.743566992014197), x100
+
+% How much more infrastructure-weighted the machine vocabulary is.
+\newcommand{\infraWeightRatio}{5.6}    % machine infrastructure_fraction / human infrastructure_fraction = 0.25643300798580304/0.045510032806897076 = 5.6346; both from results/layer_composition.csv, infrastructure_fraction, rows corpus=machine and corpus=human
+
+% ---------------------------------------------------------------------------
+% Residual below the reachable bound, by cause. Shares are transcribed
+% percentages, not fractions, so nothing is converted; they sum to 100.0.
+% ---------------------------------------------------------------------------
+\newcommand{\residualTargets}{248}          % results/residual_decomposition.csv, residual_targets (mathematical targets the reachable bound finds and the extractor misses)
+\newcommand{\residualResolutionPct}{89.5}   % results/residual_decomposition.csv, class=resolution_vs_substring, share_pct
+\newcommand{\residualKeywordPct}{8.9}       % results/residual_decomposition.csv, class=keyword_list, share_pct
+\newcommand{\residualCommentPct}{1.6}       % results/residual_decomposition.csv, class=comment_or_string_only, share_pct

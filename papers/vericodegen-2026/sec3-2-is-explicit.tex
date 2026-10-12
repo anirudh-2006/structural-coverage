@@ -1,0 +1,69 @@
+% Section 3.2 -- instrument characterization, part one.
+% Companion to the dag_layer finding. Framing: a caution for consumers of the
+% MathlibGraph release, not a limitation of this work. No literal numbers:
+% every figure is a macro from numbers.tex. The retention decomposition lives
+% in 3.3 -- this section states the set relation and points forward.
+
+\subsection{\texttt{is\_explicit} does not mean ``typed in source''}
+\label{sec:is-explicit}
+
+The dependency graph we build on~\citep{li2026network} distinguishes \emph{explicit} edges from the
+much larger set of compiler-synthesized ones, and identifies the explicit
+subgraph as the closer proxy for human-intended dependency structure. That
+subgraph is our object of study, and the distinction is the right one to draw.
+The flag's name, however, invites a reading it does not support, and anyone
+building a source-level pipeline on this release should know which reading is
+correct before choosing a denominator.
+
+\paragraph{Where the flag comes from.}
+We consume the published graph rather than re-running its extraction; what
+follows is provenance, read off the release's own parser and the documented
+behaviour of the tool upstream of it. \texttt{is\_explicit} originates as the
+\texttt{*} marker emitted by \texttt{lean-training-data}'s \texttt{premises}
+command~\citep{leantrainingdata}, and the release's parser consumes it with that
+meaning. The marker records that a constant occupies an \emph{explicit argument
+position of the elaborated term} (a position not filled by instance
+resolution or unification). It is a property of the term the kernel accepts, and
+by construction not a claim about the surface syntax a human wrote, since it is
+assigned after elaboration, when the source text is gone.
+
+\paragraph{The two readings come apart at the top of the graph.}
+Elaboration inserts constants of its own. In the published graph,
+proof-irrelevance and rewriting plumbing (\texttt{propext}, \texttt{Eq.mpr},
+\texttt{of\_eq\_true}) carry explicit in-edges throughout the explicit
+subgraph and are among its most heavily cited nodes by in-degree. No mathlib
+author writes any of them. They are artifacts of how \texttt{rw}, \texttt{simp}
+and the equation compiler construct terms, and they are explicit in the sense
+the flag means, sitting in explicit argument positions of terms that no human
+typed in that form. The same mechanism operates less visibly throughout
+the library, in notation-backed definitions that are never written as
+identifiers, in constants emitted by arithmetic normalization, and in simp-set
+lemmas that fire without being named.
+
+\paragraph{The consequence for any source-level instrument.}
+We take the narrower of two available claims, and it is enough. Some explicit
+dependencies are never written as identifiers at all (the plumbing above is the
+clearest case), so no instrument that reads source can recover them, and
+\emph{no} source-level instrument, including a hypothetically perfect one with
+exact name resolution, complete namespace and \texttt{open} handling and no
+tokenization loss, should be expected to reach unit retention against the
+explicit set. We do not claim the stronger set relation. The two sets are not
+nested in either direction: a name written in source need not survive as the
+same dependency in the elaborated term, and source text carries names that are
+not cited constants at all. This is why we report retention against a scope
+decomposition rather than against a threshold.
+Section~\ref{sec:retention} gives that decomposition as three quantities cut
+with one matcher at three scopes, and says what each does and does not
+license.
+
+Two consequences follow for anyone building on this release. High retention
+rates reported for source-visible extraction elsewhere~\citep{cslibpremise} are
+not comparable to ours, because a retention figure inherits the semantics of the
+artifact it is scored against and belongs to an (instrument, ground-truth) pair
+rather than to the instrument alone. And membership in the explicit set is not
+evidence that a human wrote the name, so it should not be used to build a
+retrieval target, to score a premise-selection model against ``the premises a
+mathematician used,'' or to set a parser's accuracy bar. A check that costs
+very little catches this, and it is the same one that catches the attribute of
+Section~\ref{sec:dag-layer}: take the highest-in-degree nodes and ask whether a
+mathlib author would type them.

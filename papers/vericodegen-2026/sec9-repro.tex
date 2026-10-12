@@ -1,0 +1,21 @@
+% Section 9 -- reproducibility and disclosure, one paragraph.
+% Double-blind: the artifact is described, never located.
+
+\section{Reproducibility and disclosure}
+\label{sec:repro}
+
+The anonymized supplement contains the extraction and analysis source, the
+committed result files behind every table, the fetch scripts that obtain the
+input data we cannot redistribute, and the test suite in which the extraction
+audit asserts retention against its recorded value within a stated tolerance,
+so a change to the extractor fails the suite instead of silently moving a
+number here. Those scripts pull the published graph and the machine corpus from
+their public releases at pinned revisions and pin the mathlib checkout to the
+commit the graph was built from, every analysis runs from those pins and one
+fixed seed, and reported figures fall into three provenance classes that
+Section~\ref{sec:limitations}, L6, names and distinguishes. LLM assistance was
+used across the categories the call asks about: implementing the extraction
+pipeline, the metric definitions and the analysis scripts; data processing;
+running experiments; and drafting this paper; no number reported here is quoted
+from a model, and the author takes responsibility for the content, including
+the withdrawn finding of Section~\ref{sec:dag-layer}.

@@ -1,0 +1,20 @@
+% Section 5.6 -- structural breadth, one paragraph. Direction in the main text,
+% magnitudes and masses in Appendix E. Reported as unstable, NOT as evidence.
+
+\subsection{Structural breadth}
+\label{sec:breadth}
+
+Breadth, as defined in Section~\ref{sec:definitions}, counts the distinct
+communities of the partition a proof's premises touch, per tactic step. Machine
+proofs touch fewer communities per step than human ones at every scope we can
+measure, and the direction is the only part of that we report: the gap is
+\breadthGapFull{} on the full corpora, \breadthGapSupport{} under common
+support and \breadthGapMatched{} matched 1:1, the last two computed on
+\supportRetentionMachine{} of the machine corpus. The magnitude therefore moves
+by a factor of four across designs that move the coverage result in its fourth
+decimal place, and an earlier sign flip was an artifact of a region cut on
+character length, which Section~\ref{sec:length-axis} rejects as a formatting
+control. We report the metric as unstable, having defined it before we looked,
+and we do not offer it as evidence for or against the coverage result, which
+stands on its own controls. Appendix~\ref{app:breadth} carries the masses, the
+excluded region and the partition skew that keep it secondary.

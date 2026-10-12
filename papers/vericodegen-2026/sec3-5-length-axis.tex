@@ -1,0 +1,42 @@
+% Section 3.5 -- the length axis, compressed. The tactic-step proxy and its
+% under-recording are in Appendix D. Framing: a reusable methods result, not a
+% caveat about our data. No literal numbers: macros only.
+
+\subsection{Length must be measured on a wrap-invariant axis}
+\label{sec:length-axis}
+
+Controlling for proof length is mandatory here. Short proofs mechanically cite
+fewer and more common premises, so an uncontrolled length difference can
+manufacture every effect we report. The choice of length \emph{axis} is itself
+a measurement question with a checkable answer, and that is the reusable part
+of this section.
+
+Two axes are available. On characters the corpora barely overlap, at an
+overlap coefficient of \charOverlapSample{}. On tactic steps they nearly
+coincide, at \stepOverlapCensus{}.\footnote{The two rest on different bases:
+\charOverlapSample{} is computed on the standardization sample the joint
+control was cut on, \stepOverlapCensus{} over the full census of both corpora.
+The step-axis figure on the sample basis is \stepOverlapSample{}, so the basis
+is not what separates the axes.} The disagreement is explained by how each
+corpus reaches the page. Mathlib source is hand-wrapped near a column limit and
+carries docstrings; a released machine proof is generated in one pass, wrapped
+differently or not at all, and here carries a large volume of natural-language
+commentary. Character counts absorb all of that; tactic counts do not, because
+wrapping and commentary do not change how many tactics run.
+
+Standardizing on characters is therefore substantially standardizing on source
+formatting, and that is not a neutral error. On the character axis one of our
+secondary metrics changed sign and the recall term of
+Section~\ref{sec:reference-line} collapsed to a null, and both reverse on the
+step axis. Every length control in this paper accordingly runs on tactic steps,
+and character length appears once, here, as the diagnostic that exposed the
+problem. It is not an alternative specification, because a specification that
+measures wrapping is not a second opinion about proof size. Counting steps
+needs its own instrument and the obvious one under-records, which
+Appendix~\ref{app:steps} measures and Section~\ref{sec:limitations}, L2,
+carries as a limitation.
+
+The check that settles the axis is cheap. Compute the overlap coefficient on
+each candidate axis before choosing one. Where the axes disagree as sharply as
+they do here, the choice is load-bearing, and making it after seeing the
+comparison is a researcher degree of freedom.

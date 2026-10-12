@@ -1,0 +1,59 @@
+% Sections 5.2 and 5.3 merged: the two controls that answer the two objections
+% to the headline, stated with their results rather than with their
+% construction. Design details live in 5.1's table caption and the appendix.
+
+\subsection{Corpus size and region selection}
+\label{sec:size-controls}
+
+Two objections do not require argument, because both quantities can be varied
+directly. The first is arithmetic: more proofs find more distinct premises
+whatever the populations are doing, so a vocabulary compared at unequal $n$
+confounds breadth with sample size. We rarefy the human corpus (seeded draws
+of $n$ proofs, distinct premises counted, mean reported), which gives its
+vocabulary at every corpus size. At the machine corpus's own size,
+\machineProofs{} proofs, the human vocabulary is \humanVocabRarefied{}
+premises, so equalizing size moves the ratio from \vocabRatio{}$\times$ to
+\vocabRatioRarefied{}$\times$ rather than to one. Further down the curve the
+point is sharper still. At a twentieth of the human corpus,
+\rarefiedFivePctProofs{} proofs and far fewer than the machine corpus has, the
+human vocabulary is \humanVocabRarefiedFivePct{} premises, an order of
+magnitude above what the machine corpus reaches at full size. Neither curve has
+saturated, so both reported vocabularies are lower bounds on their
+populations', and the machine curve is the nearer of the two to flattening; we
+do not extrapolate either beyond the corpora we have.
+
+The second objection is the genre difference named in
+Section~\ref{sec:background}: if competition problems occupy a small corner of
+the library, a narrow machine vocabulary is a fact about which problems were
+posed. The control we would prefer, a same-problem comparison, does not exist.
+The only human Lean~4 proofs of miniF2F statements are a handful released as a
+prover's own few-shot prompt pool, the LeanDojo Lean~4 port carries
+\texttt{sorry} throughout, and the original corpus is Lean~3. We therefore
+restrict by region instead, keeping every top-level region that contains at
+least one machine premise. The rule was fixed before the run, is support-based so there
+is no threshold or top-$k$ to tune, and introduces no metric. The machine
+vocabulary occupies \areaRegionsMachine{} of the \areaRegionsHuman{} regions
+the human vocabulary spans, and those regions hold \areaHumanSurvivalPct{}\% of
+human premises, so the restriction discards most of the human vocabulary rather
+than trimming it. Inside them the ratio is \areaRestrictedRatio{}$\times$ at a
+Jaccard of \areaRestrictedJaccard{}, with \areaRestrictedHumanOnlyPct{}\% of
+the restricted human vocabulary still untouched.
+
+Machine leakage is zero by construction under this rule, which is what makes
+it primary and its registered sensitivities the check on it. The
+top-twelve-namespace variant gives \areaTopTwelveRatio{}$\times$ but discards
+\areaTopTwelveMachineLeakPct{}\% of the machine vocabulary on the way, and a
+restriction that drops nearly a third of the population it controls for is
+answering a different question. We report the range
+\areaTopTwelveRatio{}$\times$ to \areaRestrictedRatio{}$\times$ rather than
+either endpoint. Neither control reaches genre, or selection \emph{within} a
+region. \texttt{Nat} holds competition arithmetic and analytic number theory
+alike. The closest genre check we have is exploratory, and we state it here rather than
+only in limitations because it is the design that most constrains what the
+headline can mean. Mathlib's own IMO archive, against the machine corpus
+rarefied to the same proof count, gives \genreCheckRatio{}$\times$, the
+smallest gap of any design we ran. It was not pre-registered, it is a lower
+bound, it is not extraction-audited, and it is not regenerable from the
+released artifact (Section~\ref{sec:limitations}, L6). These designs bound how much of the gap corpus size and region selection
+explain; Section~\ref{sec:limitations}, L4, bounds what the result can mean in
+the presence of what they do not.

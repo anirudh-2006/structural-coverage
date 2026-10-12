@@ -1,0 +1,68 @@
+% Section 3.3 -- retention and its scope decomposition.
+% Characterization, not apology. No literal numbers: every figure is a macro
+% from numbers.tex. Budget: 500-600 words (section 3 total is 2.25 pages).
+
+\subsection{Retention, and what its denominator is a property of}
+\label{sec:retention}
+
+We report retention against a decomposition rather than against a threshold,
+and the reason is instructive about how instruments in this setting should be
+scored at all.
+
+Our original design gated the project on retention: the extractor had to clear
+a fixed fraction of the explicit targets in its sample or the approach was
+abandoned. That gate was retired before it ever returned a verdict we acted on,
+because its threshold turned out to encode two things that have nothing to do
+with our parser. The first is the elaborator behaviour of
+Section~\ref{sec:is-explicit}: part of the explicit set was never in the source
+text, so no fraction of it is reachable by reading source. The second is
+editorial: mathlib authors group related results in files, so whether a premise
+name happens to appear elsewhere in a declaration's file is a fact about how the
+library is organised. A threshold that moves when either of those changes is not
+measuring the instrument, and a pass it awards is not evidence about the
+instrument either. What replaces it is a decomposition into quantities that
+are each measured the same way, so that the steps between them can be read
+off rather than argued for.
+
+\begin{table}[h]
+\centering
+\caption{Retention of mathematical-layer explicit targets, same sample and same
+loose matcher, at three scopes. These are matcher-based reference points, not
+attributable bounds: a loose name match is evidence that a name occurs within
+the scope, not that the premise was used there, and it can equally miss a
+premise written under another spelling or notation.}
+\label{tab:retention}
+\small
+\begin{tabular}{llc}
+\toprule
+Quantity & Denominator & Value \\
+\midrule
+Whole-file reference   & explicit targets, name matched anywhere in the file & \ceilingWholeFile{} \\
+Declaration reference  & explicit targets, name matched in the declaration   & \reachableBound{} \\
+Achieved retention     & explicit targets, our extractor                     & \retention{} \\
+Efficiency             & achieved against the declaration reference          & \efficiencyReachable{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Read downward, Table~\ref{tab:retention} separates three steps of very
+different kinds. Targets missed even by a whole-file match are not recoverable
+by reading source under any spelling the matcher knows; elaborator-inserted
+constants are the mechanism we can name for that, and we do not claim it
+accounts for all of them. The step from the whole-file to the declaration
+reference is an organisational effect: those targets are named somewhere in the
+file but nowhere in the declaration that depends on them, so a per-declaration
+instrument cannot see them however good its name resolution is. Only the last
+line is a claim about our parser, and it is the figure we ask to be judged on.
+
+The \residualTargets{} targets the declaration reference point finds and the
+extractor misses are identified rather than merely counted, and
+Appendix~\ref{app:residual} decomposes them: the dominant class is the
+definitional gap between resolving an identifier and matching a substring, and
+closing it entirely would mean buying retention at the cost of precision. Two
+properties make this a characterization rather than a disclosure. Each residual
+class names a mechanism. And efficiency is close to flat across tactic classes,
+from \efficiencyByClassMin{} to \efficiencyByClassMax{}, so the instrument does
+not fail preferentially on the proof styles that distinguish the two corpora.
+That is a statement about mathlib proofs only, as
+Section~\ref{sec:limitations}, L1, records.

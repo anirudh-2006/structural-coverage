@@ -1,0 +1,41 @@
+% Section 1 -- introduction, half a page. Selection framing, three
+% contributions, one statement of the range. The abstract and 5.1 carry the
+% rest. No literal numbers: macros only.
+
+\section{Introduction}
+\label{sec:intro}
+
+A Lean proof the kernel accepts is correct, and nothing more needs saying about
+that. But a proof is also a \emph{selection}. Of the hundreds of thousands of
+declarations in a library, it reaches for a particular few. That selection
+determines what a premise-selection model must learn to retrieve, what breaks
+when a lemma is renamed or generalized, and whether a development participates
+in the library or merely sits beside it. Correctness is settled by the kernel. Nothing settles the selection.
+
+We make it measurable. A proof's premises are nodes in the library's dependency
+graph, so a proof population induces a subgraph, and two populations can be
+compared by which parts of the library their subgraphs occupy. We compare a
+released machine corpus of \machineProofs{} Lean proofs against mathlib's
+\humanProofs{} declarations, working entirely from published artifacts and
+invoking Lean nowhere.
+
+Three contributions follow. First, what a released-artifact pipeline can
+measure and how reliably (Section~\ref{sec:instrument}): the release's
+\texttt{is\_explicit} flag does not mean ``written in source'', so no
+source-level instrument should be expected to reach unit retention against it;
+we report retention as a scope decomposition at \retention{}, of which
+\efficiencyReachable{} is what a per-declaration instrument can reach, flat
+across tactic classes so the instrument does not fail preferentially on the
+proof styles that separate the corpora; we quantify the displacement our own
+extractor induces, and show that proof length must be measured on a
+wrap-invariant axis. Second, the coverage result
+(Section~\ref{sec:results}): mathlib's proofs draw on \humanVocab{} distinct
+premises against the machine corpus's \machineVocab{}, a gap that survives
+every control we can construct at \vocabRatio{}$\times$ on the full corpora,
+\areaRestrictedRatio{}$\times$ restricted to the machine vocabulary's own
+library regions, and \vocabRatioMatched{}$\times$ matched on proof count,
+tactic class and length. The direction is invariant across designs and the
+magnitude is not, so we quote the range throughout. Third, a caution
+(Section~\ref{sec:dag-layer}): a depth finding we built on a published
+attribute is withdrawn, because the attribute is a centrality proxy, and we
+give the check that would have caught it.

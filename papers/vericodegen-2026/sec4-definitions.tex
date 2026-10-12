@@ -1,0 +1,38 @@
+% Section 4 -- formal definitions. Definitional only: no figures, no macros.
+% The "this is set cardinality, not structure" objection is raised here and
+% answered here, which is cheaper than defending it after a reviewer raises it.
+
+\section{Structural coverage: formal definitions}
+\label{sec:definitions}
+
+Let $G$ be the explicit subgraph of the mathlib dependency graph, as
+characterized in Section~\ref{sec:is-explicit}: its nodes are declarations and
+its edges are the source-attributable dependencies between them. A proof $p$
+selects a set of premises $P(p) \subseteq V(G)$, the declarations it cites, and
+those premises span an induced subgraph $G[P(p)]$. For a corpus $C$ we write
+$V(C) = \bigcup_{p \in C} P(p)$ for its \emph{vocabulary}: the node set of the
+subgraph the corpus's whole proof population induces.
+
+\paragraph{Coverage.} Given a human corpus $H$ and a machine corpus $M$,
+coverage is the family of quantities over $V(H)$ and $V(M)$: the two
+vocabulary sizes and their ratio; the Jaccard index
+$J = |V(H) \cap V(M)| \,/\, |V(H) \cup V(M)|$; and the human-only fraction
+$|V(H) \setminus V(M)| \,/\, |V(H)|$. These quantities read no edges.
+Computing $J$ consults only membership, so coverage is the node-set family and
+breadth, below, the edge-derived one. Appendix~\ref{app:construct} states what
+the graph does and does not supply to the coverage arithmetic, why we chose a
+measure that needs no aggregation, and how each quantity is reported.
+
+\paragraph{Breadth.} Structural breadth is the topological complement: the
+number of distinct communities of a fixed partition of $G$ that a premise set
+touches, optionally per unit of proof length. This does read edges, since the
+partition is computed from them.
+
+\paragraph{Which definitions need the hub-layer split.} Coverage does not. It
+aggregates nothing, so Finding~3 does not bind, and the layer composition of
+each vocabulary is reported in Section~\ref{sec:layer-composition} as a result
+in its own right rather than as a correction. Breadth and every
+centrality-flavoured quantity do need it. Breadth carries a second caveat, the
+partition skew of Appendix~\ref{app:breadth}, and it is reported as secondary
+throughout, with its three design-dependent magnitudes quoted together, never
+one alone.
