@@ -157,7 +157,9 @@ reported as one.
   comments across `src/` and `tests/` cite `CLAUDE.md` sections and
   `notes/changes/*.md` change records, neither of which is included in this
   public snapshot. The references are stale here; the source was deliberately
-  left unmodified rather than rewritten.
+  left unmodified rather than rewritten. The LaTeX sources in `papers/` also
+  carry comments citing `CLAUDE.md` and `notes/`, which are not in this release;
+  the paper sources are kept exactly as submitted.
 - **DeepSeek-Prover-V1 and Goedel-Prover-V2 are not included.** One machine
   corpus only, as stated in the paper's scope.
 
@@ -228,6 +230,8 @@ uses 0.8193, the frozen ceiling measured on its own sample
 (`results/ceiling_analysis.csv`, `layer="mathematical", matcher="loose"` →
 `rate`, 6,196 / 7,563). The VeriCodeGen paper uses 0.7915, the same ceiling
 recomputed on the audit sample, so all four rows of its Table 1 share one sample.
+The MATH-AI paper's efficiency figure (0.7475 = 0.6124 / 0.8193) divides across
+two samples; VeriCodeGen's Table 1 efficiency (0.8815) is the same-sample version.
 
 ### VeriCodeGen numbers with no committed CSV
 
@@ -261,7 +265,7 @@ papers/
 
 ## Citing
 
-The MATH-AI paper is a non-archival workshop submission.
+Both papers are non-archival workshop papers.
 
 ```bibtex
 @inproceedings{balaji2026structural,
