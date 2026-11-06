@@ -153,13 +153,7 @@ reported as one.
 
 ### Known gaps
 
-- **Provenance comments point outside this release.** Roughly 60 docstrings and
-  comments across `src/` and `tests/` cite `CLAUDE.md` sections and
-  `notes/changes/*.md` change records, neither of which is included in this
-  public snapshot. The references are stale here; the source was deliberately
-  left unmodified rather than rewritten. The LaTeX sources in `papers/` also
-  carry comments citing `CLAUDE.md` and `notes/`, which are not in this release;
-  the paper sources are kept exactly as submitted.
+- Some source comments reference internal development notes that are not part of this public release; the code and paper sources are otherwise unmodified.
 - **DeepSeek-Prover-V1 and Goedel-Prover-V2 are not included.** One machine
   corpus only, as stated in the paper's scope.
 
